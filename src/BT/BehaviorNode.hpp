@@ -2,6 +2,8 @@
 #ifndef BT_BEHAVIOR_NODE
 #define BT_BEHAVIOR_NODE
 
+#include <cstdlib>
+
 #include <vector>
 #include <memory>
 
@@ -24,10 +26,10 @@ public:
         };
 
         State();
-        State(StateType stateType, BehaviorNode* lastRunning);
+        State(StateType stateType, std::size_t lastRunningIndex);
 
         StateType stateType;
-        BehaviorNode* lastRunning;
+        std::size_t lastRunningIndex;
     };
 
     BehaviorNode();

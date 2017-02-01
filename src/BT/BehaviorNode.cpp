@@ -5,12 +5,12 @@
 
 BT::BehaviorNode::State::State() :
 stateType(READY_SUCCESS),
-lastRunning(nullptr)
+lastRunningIndex(0)
 {}
 
-BT::BehaviorNode::State::State(StateType stateType, BehaviorNode* lastRunning) :
+BT::BehaviorNode::State::State(StateType stateType, std::size_t lastRunningIndex) :
 stateType(stateType),
-lastRunning(lastRunning)
+lastRunningIndex(lastRunningIndex)
 {}
 
 BT::BehaviorNode::BehaviorNode() :
