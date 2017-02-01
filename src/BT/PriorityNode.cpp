@@ -12,9 +12,10 @@ BT::BehaviorNode::State BT::PriorityNode::performAction()
 {
     resetState();
 
+    State cState{};
     for(std::size_t i = 0; i < children.size(); ++i)
     {
-        State cState = children[i]->activate();
+        cState = children[i]->activate();
         switch(cState.stateType)
         {
         case State::READY_SUCCESS:
@@ -31,6 +32,7 @@ BT::BehaviorNode::State BT::PriorityNode::performAction()
         }
     }
 
+    // here state should also be default (READY_SUCCESS)
     return state;
 }
 
