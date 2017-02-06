@@ -4,11 +4,13 @@ project(BehaviorTree)
 set(BehaviorTree_SOURCES
     src/BT/BehaviorNode.cpp
     src/BT/PriorityNode.cpp
+    src/BT/SequenceNode.cpp
+    src/BT/ActionNode.cpp
 )
 
 add_library(BehaviorTree ${BehaviorTree_SOURCES})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -D NDEBUG")
 
