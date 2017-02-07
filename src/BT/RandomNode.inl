@@ -2,18 +2,35 @@
 template <typename RandomEngine>
 BT::RandomNode<RandomEngine>::RandomNode() :
 LogicNode(),
-rengine(std::random_device()())
-{}
+seed(std::random_device()()),
+rengine()
+{
+    rengine.seed(seed);
+}
 
 template <typename RandomEngine>
 BT::RandomNode<RandomEngine>::RandomNode(RandomEngine::result_type seed) :
 LogicNode(),
+seed(seed),
 rengine(seed)
 {}
 
 template <typename RandomEngine>
 BT::RandomNode<RandomEngine>::~RandomNode()
 {}
+
+template <typename RandomEngine>
+RandomEngine::result_type BT::RandomNode<RandomEngine>::getSeed() const
+{
+    return seed;
+}
+
+template <typename RandomEngine>
+void BT::RandomNode<RandomEngine>::setSeed(RandomEngine::result_type seed)
+{
+    this->seed = seed;
+    rengine.seed(seed);
+}
 
 template <typename RandomEngine>
 BT::BehaviorNode::State BT::RandomNode<RandomEngine>::performAction()
@@ -36,6 +53,11 @@ BT::BehaviorNode::State BT::RandomNode<RandomEngine>::performAction()
 template <typename RandomEngine>
 BT::BehaviorNode::State BT::RandomNode<RandomEngine>::continueAction()
 {
+    if(children.empty())
+    {
+        state.stateType = State::ERROR;
+        return state;
+    }
     State cState = children[state.lastRunningIndex]->activate();
     state.stateType = cState.stateType;
 
