@@ -9,7 +9,7 @@ rengine()
 }
 
 template <typename RandomEngine>
-BT::RandomNode<RandomEngine>::RandomNode(RandomEngine::result_type seed) :
+BT::RandomNode<RandomEngine>::RandomNode(typename RandomEngine::result_type seed) :
 LogicNode(),
 seed(seed),
 rengine(seed)
@@ -20,13 +20,13 @@ BT::RandomNode<RandomEngine>::~RandomNode()
 {}
 
 template <typename RandomEngine>
-RandomEngine::result_type BT::RandomNode<RandomEngine>::getSeed() const
+typename RandomEngine::result_type BT::RandomNode<RandomEngine>::getSeed() const
 {
     return seed;
 }
 
 template <typename RandomEngine>
-void BT::RandomNode<RandomEngine>::setSeed(RandomEngine::result_type seed)
+void BT::RandomNode<RandomEngine>::setSeed(typename RandomEngine::result_type seed)
 {
     this->seed = seed;
     rengine.seed(seed);
