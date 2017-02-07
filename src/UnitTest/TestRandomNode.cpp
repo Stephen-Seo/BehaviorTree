@@ -114,12 +114,19 @@ TEST(BehaviorTree, RandomNode)
         dist = std::uniform_int_distribution<unsigned int>(0, 3);
         BT::BehaviorNode::State state;
         unsigned int nextIndex = 0;
+        const unsigned int maxIterations = 1024;
+        unsigned int iterations = 0;
 
         for(unsigned int i = 0; i < 10; ++i)
         {
             nextIndex = dist(rengine);
+            iterations = 0;
             do {
                 state = rn.activate();
+                if(iterations++ > maxIterations)
+                {
+                    break;
+                }
             }
             while(state.stateType == BT::BehaviorNode::State::RUNNING);
             checkFlags(nextIndex);
