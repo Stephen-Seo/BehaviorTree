@@ -15,6 +15,7 @@ TEST(BehaviorTree, RandomNode)
     std::uniform_int_distribution<unsigned int> dist(0, 3);
     std::bitset<4> flags;
 
+    // Next time, just use "auto" instead of "std::function"
     const std::function<void()> resetFlags = [&flags] () {
         for(unsigned int i = 0; i < 4; ++i)
         {
