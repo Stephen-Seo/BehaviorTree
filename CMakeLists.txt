@@ -6,6 +6,7 @@ set(BehaviorTree_SOURCES
     src/BT/PriorityNode.cpp
     src/BT/SequenceNode.cpp
     src/BT/ActionNode.cpp
+    src/BT/LoopNode.cpp
 )
 
 set(UnitTest_SOURCES
