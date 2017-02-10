@@ -14,6 +14,7 @@ set(UnitTest_SOURCES
     src/UnitTest/main.cpp
     src/UnitTest/TestRandomNode.cpp
     src/UnitTest/TestActionNode.cpp
+    src/UnitTest/TestPriorityNode.cpp
 )
 
 add_library(BehaviorTree ${BehaviorTree_SOURCES})

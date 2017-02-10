@@ -35,6 +35,9 @@ public:
     BehaviorNode();
     virtual ~BehaviorNode();
 
+    BehaviorNode(BehaviorNode&& other) = default;
+    BehaviorNode& operator = (BehaviorNode&& other) = default;
+
     void insert(Ptr& node);
     void insert(Ptr&& node);
 
