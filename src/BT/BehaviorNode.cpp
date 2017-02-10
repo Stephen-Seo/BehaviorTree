@@ -22,6 +22,32 @@ state()
 BT::BehaviorNode::~BehaviorNode()
 {}
 
+BT::BehaviorNode::BehaviorNode(const BehaviorNode& other)
+{
+    parent = other.parent;
+    state = other.state;
+    children.clear();
+
+    for(std::size_t i = 0; i < other.children.size(); ++i)
+    {
+        insert(other.children[i]->getCopy());
+    }
+}
+
+BT::BehaviorNode& BT::BehaviorNode::operator = (const BehaviorNode& other)
+{
+    parent = other.parent;
+    state = other.state;
+    children.clear();
+
+    for(std::size_t i = 0; i < other.children.size(); ++i)
+    {
+        insert(other.children[i]->getCopy());
+    }
+
+    return *this;
+}
+
 void BT::BehaviorNode::insert(Ptr& node)
 {
     node->parent = this;

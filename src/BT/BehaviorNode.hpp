@@ -35,6 +35,9 @@ public:
     BehaviorNode();
     virtual ~BehaviorNode();
 
+    BehaviorNode(const BehaviorNode& other);
+    BehaviorNode& operator = (const BehaviorNode& other);
+
     BehaviorNode(BehaviorNode&& other) = default;
     BehaviorNode& operator = (BehaviorNode&& other) = default;
 
