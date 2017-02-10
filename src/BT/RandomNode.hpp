@@ -9,6 +9,9 @@
 namespace BT
 {
 
+/**
+    For default use, declare as type "RandomEngine<>"
+*/
 template <typename RandomEngine = std::mt19937>
 class RandomNode : public LogicNode
 {
