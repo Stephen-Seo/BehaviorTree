@@ -24,11 +24,13 @@ BT::BehaviorNode::~BehaviorNode()
 
 void BT::BehaviorNode::insert(Ptr& node)
 {
+    node->parent = this;
     children.push_back(std::move(node));
 }
 
 void BT::BehaviorNode::insert(Ptr&& node)
 {
+    node->parent = this;
     children.push_back(std::forward<Ptr>(node));
 }
 

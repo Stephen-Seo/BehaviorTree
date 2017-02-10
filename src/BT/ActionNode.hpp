@@ -18,6 +18,8 @@ public:
     ActionNode(ActionFunctionT actionFunction);
     virtual ~ActionNode();
 
+    virtual Ptr getCopy() override;
+
     void setActionFunction(ActionFunctionT actionFunction);
 
 protected:

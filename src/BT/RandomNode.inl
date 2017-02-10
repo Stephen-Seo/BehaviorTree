@@ -20,6 +20,22 @@ BT::RandomNode<RandomEngine>::~RandomNode()
 {}
 
 template <typename RandomEngine>
+BT::BehaviorNode::Ptr BT::RandomNode<RandomEngine>::getCopy()
+{
+    std::unique_ptr<RandomNode> copy(new RandomNode());
+
+    copy->parent = parent;
+    copy->state = State{};
+
+    for(std::size_t i = 0; i < children.size(); ++i)
+    {
+        copy->insert(children[i]->getCopy());
+    }
+
+    return Ptr(copy.release());
+}
+
+template <typename RandomEngine>
 typename RandomEngine::result_type BT::RandomNode<RandomEngine>::getSeed() const
 {
     return seed;

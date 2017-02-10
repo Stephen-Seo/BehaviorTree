@@ -13,9 +13,11 @@ public:
     LoopNode();
     virtual ~LoopNode();
 
+    virtual Ptr getCopy() override;
+
 private:
-    virtual State performAction();
-    virtual State continueAction();
+    virtual State performAction() override;
+    virtual State continueAction() override;
 
     void performLoop(std::size_t index = 0);
 

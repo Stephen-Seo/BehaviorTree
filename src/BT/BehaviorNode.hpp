@@ -45,6 +45,8 @@ public:
 
     State activate();
 
+    virtual Ptr getCopy() = 0;
+
 protected:
     BehaviorNode* parent;
     std::vector<Ptr> children;

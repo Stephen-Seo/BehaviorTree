@@ -20,6 +20,8 @@ public:
     RandomNode(typename RandomEngine::result_type seed);
     virtual ~RandomNode();
 
+    virtual Ptr getCopy() override;
+
     typename RandomEngine::result_type getSeed() const;
     void setSeed(typename RandomEngine::result_type seed);
 

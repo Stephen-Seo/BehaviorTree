@@ -13,6 +13,8 @@ public:
     PriorityNode();
     virtual ~PriorityNode();
 
+    virtual Ptr getCopy() override;
+
 protected:
     virtual State performAction() override;
     virtual State continueAction() override;

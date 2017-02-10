@@ -8,6 +8,21 @@ LogicNode()
 BT::ConcurrentNode::~ConcurrentNode()
 {}
 
+BT::BehaviorNode::Ptr BT::ConcurrentNode::getCopy()
+{
+    std::unique_ptr<ConcurrentNode> copy(new ConcurrentNode());
+
+    copy->parent = parent;
+    copy->state = State{};
+
+    for(std::size_t i = 0; i < children.size(); ++i)
+    {
+        copy->insert(children[i]->getCopy());
+    }
+
+    return Ptr(copy.release());
+}
+
 BT::BehaviorNode::State BT::ConcurrentNode::performAction()
 {
     for(std::size_t i = 0; i < children.size(); ++i)

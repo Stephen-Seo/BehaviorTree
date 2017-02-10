@@ -13,9 +13,11 @@ public:
     ConcurrentNode();
     virtual ~ConcurrentNode();
 
+    virtual Ptr getCopy() override;
+
 private:
-    virtual State performAction();
-    virtual State continueAction();
+    virtual State performAction() override;
+    virtual State continueAction() override;
 
 };
 
