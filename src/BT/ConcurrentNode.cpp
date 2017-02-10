@@ -1,16 +1,15 @@
 
-#include "SequenceNode.hpp"
+#include "ConcurrentNode.hpp"
 
-BT::SequenceNode::SequenceNode() :
+BT::ConcurrentNode::ConcurrentNode() :
 LogicNode()
 {}
 
-BT::SequenceNode::~SequenceNode()
+BT::ConcurrentNode::~ConcurrentNode()
 {}
 
-BT::BehaviorNode::State BT::SequenceNode::performAction()
+BT::BehaviorNode::State BT::ConcurrentNode::performAction()
 {
-    bool failed = false;
     for(std::size_t i = 0; i < children.size(); ++i)
     {
         state = children[i]->activate();
@@ -22,29 +21,20 @@ BT::BehaviorNode::State BT::SequenceNode::performAction()
             state.lastRunningIndex = i;
             return state;
         case State::FAILED:
-            failed = true;
-            break;
         case State::ERROR:
+            return state;
         default:
             state.stateType = State::ERROR;
             return state;
         }
     }
 
-    if(failed)
-    {
-        state.stateType = State::FAILED;
-    }
-    else
-    {
-        state.stateType = State::READY_SUCCESS;
-    }
+    // should be READY_SUCCESS
     return state;
 }
 
-BT::BehaviorNode::State BT::SequenceNode::continueAction()
+BT::BehaviorNode::State BT::ConcurrentNode::continueAction()
 {
-    bool failed = false;
     for(std::size_t i = state.lastRunningIndex; i < children.size(); ++i)
     {
         state = children[i]->activate();
@@ -56,23 +46,15 @@ BT::BehaviorNode::State BT::SequenceNode::continueAction()
             state.lastRunningIndex = i;
             return state;
         case State::FAILED:
-            failed = true;
-            break;
         case State::ERROR:
+            return state;
         default:
             state.stateType = State::ERROR;
             return state;
         }
     }
 
-    if(failed)
-    {
-        state.stateType = State::FAILED;
-    }
-    else
-    {
-        state.stateType = State::READY_SUCCESS;
-    }
+    // should be READY_SUCCESS
     return state;
 }
 
