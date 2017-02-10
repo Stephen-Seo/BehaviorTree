@@ -17,6 +17,7 @@ BT::ActionNode::~ActionNode()
 void BT::ActionNode::setActionFunction(ActionFunctionT actionFunction)
 {
     this->actionFunction = actionFunction;
+    state = State();
 }
 
 BT::BehaviorNode::State BT::ActionNode::performAction()
