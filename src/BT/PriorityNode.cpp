@@ -12,9 +12,6 @@ BT::BehaviorNode::Ptr BT::PriorityNode::getCopy()
 {
     std::unique_ptr<PriorityNode> copy(new PriorityNode());
 
-    copy->parent = parent;
-    copy->state = State{};
-
     for(std::size_t i = 0; i < children.size(); ++i)
     {
         copy->insert(children[i]->getCopy());

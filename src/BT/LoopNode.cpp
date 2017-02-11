@@ -12,9 +12,6 @@ BT::BehaviorNode::Ptr BT::LoopNode::getCopy()
 {
     std::unique_ptr<LoopNode> copy(new LoopNode());
 
-    copy->parent = parent;
-    copy->state = State{};
-
     for(std::size_t i = 0; i < children.size(); ++i)
     {
         copy->insert(children[i]->getCopy());

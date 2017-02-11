@@ -24,9 +24,6 @@ BT::BehaviorNode::Ptr BT::RandomNode<RandomEngine>::getCopy()
 {
     std::unique_ptr<RandomNode> copy(new RandomNode());
 
-    copy->parent = parent;
-    copy->state = State{};
-
     for(std::size_t i = 0; i < children.size(); ++i)
     {
         copy->insert(children[i]->getCopy());

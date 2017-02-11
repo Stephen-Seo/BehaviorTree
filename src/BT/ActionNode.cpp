@@ -18,8 +18,6 @@ BT::BehaviorNode::Ptr BT::ActionNode::getCopy()
 {
     std::unique_ptr<ActionNode> copy(new ActionNode());
 
-    copy->parent = parent;
-    copy->state = State{};
     copy->actionFunction = actionFunction;
 
     for(std::size_t i = 0; i < children.size(); ++i)
