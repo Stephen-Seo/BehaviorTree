@@ -49,20 +49,31 @@ TEST(BehaviorLuaFactory, Factory)
     blf.exposeFunction(activate1, "activate1");
     blf.exposeFunction(activate2, "activate2");
 
-    BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript.lua");
+    {
+        BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript.lua");
+        ASSERT_TRUE(tree);
 
-    ASSERT_TRUE(tree);
+        tree->activate();
 
-    tree->activate();
+        EXPECT_EQ(1, a0);
+        EXPECT_EQ(1, a1);
+        EXPECT_EQ(1, a2);
 
-    EXPECT_EQ(1, a0);
-    EXPECT_EQ(1, a1);
-    EXPECT_EQ(1, a2);
+        tree->activate();
 
-    tree->activate();
+        EXPECT_EQ(2, a0);
+        EXPECT_EQ(2, a1);
+        EXPECT_EQ(2, a2);
+    }
 
-    EXPECT_EQ(2, a0);
-    EXPECT_EQ(2, a1);
-    EXPECT_EQ(2, a2);
+    a0 = 0;
+    {
+        BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript2.lua");
+        ASSERT_TRUE(tree);
+
+        tree->activate();
+
+        EXPECT_EQ(1, a0);
+    }
 }
 
