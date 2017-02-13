@@ -6,7 +6,7 @@
 BT::ActionNode::ActionNode() :
 BehaviorNode(),
 actionFunction(),
-LWrapper(std::make_shared<LuaStateWrapper>()),
+LWrapper(),
 lua(),
 luaIsFilename(false)
 {}
@@ -14,7 +14,7 @@ luaIsFilename(false)
 BT::ActionNode::ActionNode(ActionFunctionT actionFunction) :
 BehaviorNode(),
 actionFunction(actionFunction),
-LWrapper(std::make_shared<LuaStateWrapper>()),
+LWrapper(),
 lua(),
 luaIsFilename(false)
 {}
@@ -22,7 +22,7 @@ luaIsFilename(false)
 BT::ActionNode::ActionNode(std::string lua, bool isFilename) :
 BehaviorNode(),
 actionFunction(),
-LWrapper(std::make_shared<LuaStateWrapper>()),
+LWrapper(),
 lua(lua),
 luaIsFilename(isFilename)
 {}
@@ -35,6 +35,9 @@ BT::BehaviorNode::Ptr BT::ActionNode::getCopy()
     std::unique_ptr<ActionNode> copy(new ActionNode());
 
     copy->actionFunction = actionFunction;
+    copy->lua = lua;
+    copy->luaIsFilename = luaIsFilename;
+    copy->exposedFunctions = exposedFunctions;
 
     for(std::size_t i = 0; i < children.size(); ++i)
     {
@@ -42,7 +45,6 @@ BT::BehaviorNode::Ptr BT::ActionNode::getCopy()
     }
 
     return Ptr(copy.release());
-
 }
 
 void BT::ActionNode::setActionFunction(ActionFunctionT actionFunction)
@@ -62,8 +64,8 @@ void BT::ActionNode::exposeFunctionToLuaScript(
     const char* name
 )
 {
-    lua_pushcfunction(LWrapper->L, function);
-    lua_setglobal(LWrapper->L, name);
+    LWrapper.reset();
+    exposedFunctions.insert(std::make_pair(std::string(name), function));
 }
 
 void BT::ActionNode::exposeFunctionToLuaScript(
@@ -71,8 +73,8 @@ void BT::ActionNode::exposeFunctionToLuaScript(
     std::string name
 )
 {
-    lua_pushcfunction(LWrapper->L, function);
-    lua_setglobal(LWrapper->L, name.c_str());
+    LWrapper.reset();
+    exposedFunctions.insert(std::make_pair(name, function));
 }
 
 BT::BehaviorNode::State BT::ActionNode::performAction()
@@ -111,8 +113,24 @@ BT::BehaviorNode::State BT::ActionNode::continueAction()
     }
 }
 
+void BT::ActionNode::initializeLuaState()
+{
+    LWrapper = std::make_shared<LuaStateWrapper>();
+
+    for(auto iter = exposedFunctions.begin(); iter != exposedFunctions.end(); ++iter)
+    {
+        lua_pushcfunction(LWrapper->L, iter->second);
+        lua_setglobal(LWrapper->L, iter->first.c_str());
+    }
+}
+
 BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
 {
+    if(!LWrapper)
+    {
+        initializeLuaState();
+    }
+
     int type = 0;
     if(luaIsFilename)
     {

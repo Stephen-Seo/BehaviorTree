@@ -18,6 +18,10 @@ public:
     BehaviorLuaFactory(bool isSilentNotVerbose = true);
     ~BehaviorLuaFactory();
 
+    // copy
+    BehaviorLuaFactory(const BehaviorLuaFactory& other);
+    BehaviorLuaFactory& operator = (const BehaviorLuaFactory& other);
+
     void exposeFunction(int (*function)(lua_State* L), const char* name);
     void exposeFunction(int (*function)(lua_State* L), std::string name);
     BehaviorNode::Ptr createTreeFromFile(std::string luaFilename);
@@ -27,6 +31,7 @@ private:
     bool isSilent;
     std::unordered_map<std::string, int(*)(lua_State* L)> functions;
 
+    void initializeLuaState();
     BehaviorNode::Ptr createTree();
     BehaviorNode::Ptr createTreeHelper();
 

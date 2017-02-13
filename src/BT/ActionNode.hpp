@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <string>
+#include <unordered_map>
 
 #include <lua.hpp>
 
@@ -38,11 +39,13 @@ protected:
     LuaStateWrapper::Ptr LWrapper;
     std::string lua;
     bool luaIsFilename;
+    std::unordered_map<std::string, int (*)(lua_State*)> exposedFunctions;
 
     virtual State performAction() override;
     virtual State continueAction() override;
 
 private:
+    void initializeLuaState();
     State performLuaScript(bool isContinuing);
 
 };

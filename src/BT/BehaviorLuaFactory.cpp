@@ -13,7 +13,7 @@
 #include "ActionNode.hpp"
 
 BT::BehaviorLuaFactory::BehaviorLuaFactory(bool isSilentNotVerbose) :
-LWrapper(std::make_shared<LuaStateWrapper>()),
+LWrapper(),
 isSilent(isSilentNotVerbose)
 {
 }
@@ -22,24 +22,37 @@ BT::BehaviorLuaFactory::~BehaviorLuaFactory()
 {
 }
 
+BT::BehaviorLuaFactory::BehaviorLuaFactory(const BehaviorLuaFactory& other) :
+LWrapper(),
+isSilent(other.isSilent),
+functions(other.functions)
+{
+    // do not copy LWrapper
+}
+
+BT::BehaviorLuaFactory& BT::BehaviorLuaFactory::operator = (const BehaviorLuaFactory& other)
+{
+    // do not copy LWrapper
+    isSilent = other.isSilent;
+    functions = other.functions;
+
+    return *this;
+}
+
 void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State* L), const char* name)
 {
-    lua_pushcfunction(LWrapper->L, function);
-    lua_setglobal(LWrapper->L, name);
-
     functions.insert(std::make_pair(std::string(name), function));
 }
 
 void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State* L), std::string name)
 {
-    lua_pushcfunction(LWrapper->L, function);
-    lua_setglobal(LWrapper->L, name.c_str());
-
     functions.insert(std::make_pair(name, function));
 }
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string luaFilename)
 {
+    initializeLuaState();
+
     int type = luaL_loadfile(LWrapper->L, luaFilename.c_str());
     if(type != LUA_OK)
     {
@@ -68,6 +81,8 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string lua
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string luaScript)
 {
+    initializeLuaState();
+
     int type = luaL_loadbuffer(
         LWrapper->L,
         luaScript.c_str(),
@@ -97,6 +112,17 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string l
     }
 
     return createTree();
+}
+
+void BT::BehaviorLuaFactory::initializeLuaState()
+{
+    LWrapper = std::make_shared<LuaStateWrapper>();
+
+    for(auto iter = functions.begin(); iter != functions.end(); ++iter)
+    {
+        lua_pushcfunction(LWrapper->L, iter->second);
+        lua_setglobal(LWrapper->L, iter->first.c_str());
+    }
 }
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTree()
