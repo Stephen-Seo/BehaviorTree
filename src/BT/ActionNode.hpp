@@ -5,6 +5,11 @@
 #include "BehaviorNode.hpp"
 
 #include <functional>
+#include <string>
+
+#include <lua.hpp>
+
+#include "LuaStateWrapper.hpp"
 
 namespace BT
 {
@@ -12,22 +17,32 @@ namespace BT
 class ActionNode : public BehaviorNode
 {
 public:
+    // bool - isContinuing
     typedef std::function<State::StateType(bool)> ActionFunctionT;
 
     ActionNode();
     ActionNode(ActionFunctionT actionFunction);
+    ActionNode(std::string luaScript);
     virtual ~ActionNode();
 
     virtual Ptr getCopy() override;
 
     void setActionFunction(ActionFunctionT actionFunction);
+    void setLuaActionFunction(std::string luaScript);
+
+    void exposeFunctionToLuaScript(int (*function)(lua_State* L), const char* name);
+    void exposeFunctionToLuaScript(int (*function)(lua_State* L), std::string name);
 
 protected:
-    // bool - isContinuing
     ActionFunctionT actionFunction;
+    LuaStateWrapper::Ptr LWrapper;
+    std::string luaScript;
 
     virtual State performAction() override;
     virtual State continueAction() override;
+
+private:
+    State performLuaScript(bool isContinuing);
 
 };
 

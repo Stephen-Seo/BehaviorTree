@@ -8,6 +8,8 @@ set(BehaviorTree_SOURCES
     src/BT/ActionNode.cpp
     src/BT/LoopNode.cpp
     src/BT/ConcurrentNode.cpp
+    src/BT/LuaStateWrapper.cpp
+    src/BT/BehaviorLuaFactory.cpp
 )
 
 set(UnitTest_SOURCES
@@ -16,6 +18,7 @@ set(UnitTest_SOURCES
     src/UnitTest/TestActionNode.cpp
     src/UnitTest/TestPriorityNode.cpp
     src/UnitTest/TestGetCopy.cpp
+    src/UnitTest/TestLuaFactory.cpp
 )
 
 add_library(BehaviorTree ${BehaviorTree_SOURCES})
@@ -28,6 +31,18 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "Setting build type to 'Debug', none was specified.")
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+endif()
+
+find_package(Lua)
+
+if(LUA_FOUND)
+target_include_directories(BehaviorTree
+    PUBLIC ${LUA_INCLUDE_DIR}
+)
+
+target_link_libraries(BehaviorTree
+    PUBLIC lua
+)
 endif()
 
 find_package(GTest QUIET)
