@@ -24,13 +24,7 @@ BehaviorTree = {
         },
         {
             type = "action",
-            actionFunction = [[
-                actionFunction = function (isContinuing)
-                    printOut("Action function 1 ran")
-                    activate1()
-                    return 0
-                end
-            ]]
+            actionFunctionName = "TestLuaFactoryAction2.lua"
         },
         {
             type = "action",

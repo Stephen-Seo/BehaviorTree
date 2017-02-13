@@ -7,21 +7,24 @@ BT::ActionNode::ActionNode() :
 BehaviorNode(),
 actionFunction(),
 LWrapper(std::make_shared<LuaStateWrapper>()),
-luaScript()
+lua(),
+luaIsFilename(false)
 {}
 
 BT::ActionNode::ActionNode(ActionFunctionT actionFunction) :
 BehaviorNode(),
 actionFunction(actionFunction),
 LWrapper(std::make_shared<LuaStateWrapper>()),
-luaScript()
+lua(),
+luaIsFilename(false)
 {}
 
-BT::ActionNode::ActionNode(std::string luaScript) :
+BT::ActionNode::ActionNode(std::string lua, bool isFilename) :
 BehaviorNode(),
 actionFunction(),
 LWrapper(std::make_shared<LuaStateWrapper>()),
-luaScript(luaScript)
+lua(lua),
+luaIsFilename(isFilename)
 {}
 
 BT::ActionNode::~ActionNode()
@@ -48,9 +51,10 @@ void BT::ActionNode::setActionFunction(ActionFunctionT actionFunction)
     state = State();
 }
 
-void BT::ActionNode::setLuaActionFunction(std::string luaScript)
+void BT::ActionNode::setLuaActionFunction(std::string lua, bool isFilename)
 {
-    this->luaScript = luaScript;
+    this->lua= lua;
+    luaIsFilename = isFilename;
 }
 
 void BT::ActionNode::exposeFunctionToLuaScript(
@@ -78,7 +82,7 @@ BT::BehaviorNode::State BT::ActionNode::performAction()
         state.stateType = actionFunction(false);
         return state;
     }
-    else if(!luaScript.empty())
+    else if(!lua.empty())
     {
         return performLuaScript(false);
     }
@@ -96,7 +100,7 @@ BT::BehaviorNode::State BT::ActionNode::continueAction()
         state.stateType = actionFunction(true);
         return state;
     }
-    else if(!luaScript.empty())
+    else if(!lua.empty())
     {
         return performLuaScript(true);
     }
@@ -109,22 +113,41 @@ BT::BehaviorNode::State BT::ActionNode::continueAction()
 
 BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
 {
-    int type = luaL_loadbuffer(
-        LWrapper->L,
-        luaScript.c_str(),
-        luaScript.size(),
-        "BT::ActionNode"
-    );
-    if(type != LUA_OK)
+    int type = 0;
+    if(luaIsFilename)
     {
-        state.stateType = State::ERROR;
-        return state;
+        type = luaL_loadfile(LWrapper->L, lua.c_str());
+        if(type != LUA_OK)
+        {
+            state.stateType = State::ERROR;
+            return state;
+        }
+        else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
+        {
+            lua_pop(LWrapper->L, 1);
+            state.stateType = State::ERROR;
+            return state;
+        }
     }
-    else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
+    else
     {
-        lua_pop(LWrapper->L, 1);
-        state.stateType = State::ERROR;
-        return state;
+        type = luaL_loadbuffer(
+            LWrapper->L,
+            lua.c_str(),
+            lua.size(),
+            "BT::ActionNode"
+        );
+        if(type != LUA_OK)
+        {
+            state.stateType = State::ERROR;
+            return state;
+        }
+        else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
+        {
+            lua_pop(LWrapper->L, 1);
+            state.stateType = State::ERROR;
+            return state;
+        }
     }
 
     // +1 stack: function

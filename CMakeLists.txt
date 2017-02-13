@@ -60,5 +60,17 @@ if(GTEST_FOUND)
         PUBLIC ${GTEST_BOTH_LIBRARIES}
         PUBLIC BehaviorTree
     )
+
+    add_custom_command(
+        TARGET UnitTest POST_BUILD
+        COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript.lua" "${PROJECT_BINARY_DIR}"
+        BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript.lua"
+    )
+
+    add_custom_command(
+        TARGET UnitTest POST_BUILD
+        COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryAction2.lua" "${PROJECT_BINARY_DIR}"
+        BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryAction2.lua"
+    )
 endif()
 

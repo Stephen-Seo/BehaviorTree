@@ -157,11 +157,34 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     }
     else if(std::strcmp(nodeType, "action") == 0)
     {
+        std::string actionFunction{};
+        std::string actionFunctionName{};
         // -1 stack: field "type"
         lua_pop(LWrapper->L, 1);
         // +1 stack: field "actionFunction"
         type = lua_getfield(LWrapper->L, -1, "actionFunction");
-        if(type != LUA_TSTRING)
+        if(type == LUA_TNIL)
+        {
+            if(!isSilent)
+            {
+                std::cerr << "WARNING: Field \"actionFunction\" is nil, trying \"actionFunctionName\"...\n";
+            }
+            lua_pop(LWrapper->L, 1); // -1 stack: field "actionFunction"
+            // +1 stack: field "actionFunctionName"
+            type = lua_getfield(LWrapper->L, -1, "actionFunctionName");
+            if(type != LUA_TSTRING)
+            {
+                if(!isSilent)
+                {
+                    std::cerr << "ERROR: Field \"actionFunctionName\" is not a string!\n";
+                }
+                lua_pop(LWrapper->L, 1);
+                return ptr;
+            }
+            actionFunctionName = std::string(lua_tostring(LWrapper->L, -1));
+            lua_pop(LWrapper->L, 1); // -1 stack: field "actionFunctionName"
+        }
+        else if(type != LUA_TSTRING)
         {
             if(!isSilent)
             {
@@ -170,12 +193,23 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
             lua_pop(LWrapper->L, 1);
             return ptr;
         }
+        else // is type LUA_TSTRING
+        {
+            actionFunction = std::string(lua_tostring(LWrapper->L, -1));
+            // -1 stack
+            lua_pop(LWrapper->L, 1);
+        }
 
-        const char* aFunction = lua_tostring(LWrapper->L, -1);
-        // -1 stack
-        lua_pop(LWrapper->L, 1);
+        std::unique_ptr<BT::ActionNode> an;
+        if(!actionFunction.empty())
+        {
+            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunction));
+        }
+        else if(!actionFunctionName.empty())
+        {
+            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunctionName, true));
+        }
 
-        std::unique_ptr<BT::ActionNode> an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(std::string(aFunction)));
         for(auto iter = functions.begin(); iter != functions.end(); ++iter)
         {
             an->exposeFunctionToLuaScript(iter->second, iter->first);

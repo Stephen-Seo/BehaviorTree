@@ -22,13 +22,13 @@ public:
 
     ActionNode();
     ActionNode(ActionFunctionT actionFunction);
-    ActionNode(std::string luaScript);
+    ActionNode(std::string lua, bool isFilename = false);
     virtual ~ActionNode();
 
     virtual Ptr getCopy() override;
 
     void setActionFunction(ActionFunctionT actionFunction);
-    void setLuaActionFunction(std::string luaScript);
+    void setLuaActionFunction(std::string lua, bool isFilename = false);
 
     void exposeFunctionToLuaScript(int (*function)(lua_State* L), const char* name);
     void exposeFunctionToLuaScript(int (*function)(lua_State* L), std::string name);
@@ -36,7 +36,8 @@ public:
 protected:
     ActionFunctionT actionFunction;
     LuaStateWrapper::Ptr LWrapper;
-    std::string luaScript;
+    std::string lua;
+    bool luaIsFilename;
 
     virtual State performAction() override;
     virtual State continueAction() override;
