@@ -31,8 +31,8 @@ public:
     void setActionFunction(ActionFunctionT actionFunction);
     void setLuaActionFunction(std::string lua, bool isFilename = false);
 
-    void exposeFunctionToLuaScript(int (*function)(lua_State* L), const char* name);
-    void exposeFunctionToLuaScript(int (*function)(lua_State* L), std::string name);
+    void exposeFunctionToLuaScript(int (*function)(lua_State*), const char* name);
+    void exposeFunctionToLuaScript(int (*function)(lua_State*), std::string name);
 
 protected:
     ActionFunctionT actionFunction;

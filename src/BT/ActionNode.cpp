@@ -60,7 +60,7 @@ void BT::ActionNode::setLuaActionFunction(std::string lua, bool isFilename)
 }
 
 void BT::ActionNode::exposeFunctionToLuaScript(
-    int (*function)(lua_State* L),
+    int (*function)(lua_State*),
     const char* name
 )
 {
@@ -69,7 +69,7 @@ void BT::ActionNode::exposeFunctionToLuaScript(
 }
 
 void BT::ActionNode::exposeFunctionToLuaScript(
-    int (*function)(lua_State* L),
+    int (*function)(lua_State*),
     std::string name
 )
 {

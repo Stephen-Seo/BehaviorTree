@@ -22,14 +22,14 @@ public:
     BehaviorLuaFactory(const BehaviorLuaFactory& other);
     BehaviorLuaFactory& operator = (const BehaviorLuaFactory& other);
 
-    void exposeFunction(int (*function)(lua_State* L), const char* name);
-    void exposeFunction(int (*function)(lua_State* L), std::string name);
+    void exposeFunction(int (*function)(lua_State*), const char* name);
+    void exposeFunction(int (*function)(lua_State*), std::string name);
     BehaviorNode::Ptr createTreeFromFile(std::string luaFilename);
     BehaviorNode::Ptr createTreeFromScript(std::string luaScript);
 private:
     LuaStateWrapper::Ptr LWrapper;
     bool isSilent;
-    std::unordered_map<std::string, int(*)(lua_State* L)> functions;
+    std::unordered_map<std::string, int(*)(lua_State*)> functions;
 
     void initializeLuaState();
     BehaviorNode::Ptr createTree();

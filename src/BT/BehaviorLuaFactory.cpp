@@ -39,12 +39,12 @@ BT::BehaviorLuaFactory& BT::BehaviorLuaFactory::operator = (const BehaviorLuaFac
     return *this;
 }
 
-void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State* L), const char* name)
+void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State*), const char* name)
 {
     functions.insert(std::make_pair(std::string(name), function));
 }
 
-void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State* L), std::string name)
+void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State*), std::string name)
 {
     functions.insert(std::make_pair(name, function));
 }
