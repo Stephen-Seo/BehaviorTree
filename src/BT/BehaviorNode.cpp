@@ -50,14 +50,20 @@ BT::BehaviorNode& BT::BehaviorNode::operator = (const BehaviorNode& other)
 
 void BT::BehaviorNode::insert(Ptr& node)
 {
-    node->parent = this;
-    children.push_back(std::move(node));
+    if(node)
+    {
+        node->parent = this;
+        children.push_back(std::move(node));
+    }
 }
 
 void BT::BehaviorNode::insert(Ptr&& node)
 {
-    node->parent = this;
-    children.push_back(std::forward<Ptr>(node));
+    if(node)
+    {
+        node->parent = this;
+        children.push_back(std::forward<Ptr>(node));
+    }
 }
 
 void BT::BehaviorNode::resetState()
