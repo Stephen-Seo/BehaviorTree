@@ -63,7 +63,7 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string lua
         return BT::BehaviorNode::Ptr();
     }
 
-    return std::move(createTree());
+    return createTree();
 }
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string luaScript)
@@ -96,7 +96,7 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string l
         return BT::BehaviorNode::Ptr();
     }
 
-    return std::move(createTree());
+    return createTree();
 }
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTree()
@@ -113,10 +113,10 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTree()
         return BT::BehaviorNode::Ptr();
     }
 
-    BT::BehaviorNode::Ptr ptr = std::move(createTreeHelper());
+    BT::BehaviorNode::Ptr ptr = createTreeHelper();
     lua_pop(LWrapper->L, 1); // -1 stack: global "BehaviorTree"
 
-    return std::move(ptr);
+    return ptr;
 }
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
@@ -207,7 +207,7 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     {
         // +1 stack: per iter of loop
 
-        ptr->insert(std::move(createTreeHelper()));
+        ptr->insert(createTreeHelper());
         lua_pop(LWrapper->L, 1); // -1 stack
     }
     lua_pop(LWrapper->L, 1); // -1 stack: field "children"
