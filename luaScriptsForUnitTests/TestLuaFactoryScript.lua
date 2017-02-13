@@ -31,6 +31,8 @@ BehaviorTree = {
     children = {
         {
             type = "action",
+            -- note "printOut" and "activate0" are exposed functions from
+            -- src/UnitTest/TestLuaFactory.cpp
             actionFunction = [[
                 actionFunction = function (isContinuing)
                     printOut("Action function 0 ran")
