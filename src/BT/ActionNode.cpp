@@ -2,6 +2,7 @@
 #include "ActionNode.hpp"
 
 #include <memory>
+#include <iostream>
 
 BT::ActionNode::ActionNode() :
 BehaviorNode(),
@@ -19,10 +20,10 @@ lua(),
 luaIsFilename(false)
 {}
 
-BT::ActionNode::ActionNode(std::string lua, bool isFilename) :
+BT::ActionNode::ActionNode(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename) :
 BehaviorNode(),
 actionFunction(),
-LWrapper(),
+LWrapper(LWrapper),
 lua(lua),
 luaIsFilename(isFilename)
 {}
@@ -35,9 +36,9 @@ BT::BehaviorNode::Ptr BT::ActionNode::getCopy()
     std::unique_ptr<ActionNode> copy(new ActionNode());
 
     copy->actionFunction = actionFunction;
+    copy->LWrapper = LWrapper;
     copy->lua = lua;
     copy->luaIsFilename = luaIsFilename;
-    copy->exposedFunctions = exposedFunctions;
 
     for(std::size_t i = 0; i < children.size(); ++i)
     {
@@ -53,28 +54,11 @@ void BT::ActionNode::setActionFunction(ActionFunctionT actionFunction)
     state = State();
 }
 
-void BT::ActionNode::setLuaActionFunction(std::string lua, bool isFilename)
+void BT::ActionNode::setLuaActionFunction(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename)
 {
     this->lua= lua;
     luaIsFilename = isFilename;
-}
-
-void BT::ActionNode::exposeFunctionToLuaScript(
-    int (*function)(lua_State*),
-    const char* name
-)
-{
-    LWrapper.reset();
-    exposedFunctions.insert(std::make_pair(std::string(name), function));
-}
-
-void BT::ActionNode::exposeFunctionToLuaScript(
-    int (*function)(lua_State*),
-    std::string name
-)
-{
-    LWrapper.reset();
-    exposedFunctions.insert(std::make_pair(name, function));
+    this->LWrapper = LWrapper;
 }
 
 BT::BehaviorNode::State BT::ActionNode::performAction()
@@ -113,22 +97,12 @@ BT::BehaviorNode::State BT::ActionNode::continueAction()
     }
 }
 
-void BT::ActionNode::initializeLuaState()
-{
-    LWrapper = std::make_shared<LuaStateWrapper>();
-
-    for(auto iter = exposedFunctions.begin(); iter != exposedFunctions.end(); ++iter)
-    {
-        lua_pushcfunction(LWrapper->L, iter->second);
-        lua_setglobal(LWrapper->L, iter->first.c_str());
-    }
-}
-
 BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
 {
     if(!LWrapper)
     {
-        initializeLuaState();
+        state.stateType = State::ERROR;
+        return state;
     }
 
     int type = 0;
@@ -137,11 +111,17 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
         type = luaL_loadfile(LWrapper->L, lua.c_str());
         if(type != LUA_OK)
         {
+            std::cerr << "ERROR: Failed to load lua file in ActionNode!\n";
+            if(type == LUA_ERRSYNTAX)
+            {
+                std::cerr << "HINT: Appears to be syntax error!\n";
+            }
             state.stateType = State::ERROR;
             return state;
         }
         else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
         {
+            std::cerr << "ERROR: Lua file failed to execute in ActionNode!\n";
             lua_pop(LWrapper->L, 1);
             state.stateType = State::ERROR;
             return state;
@@ -157,11 +137,17 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
         );
         if(type != LUA_OK)
         {
+            std::cerr << "ERROR: Failed to load lua script in ActionNode!\n";
+            if(type == LUA_ERRSYNTAX)
+            {
+                std::cerr << "HINT: Appears to be syntax error!\n";
+            }
             state.stateType = State::ERROR;
             return state;
         }
         else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
         {
+            std::cerr << "ERROR: Lua script failed to execute in ActionNode!\n";
             lua_pop(LWrapper->L, 1);
             state.stateType = State::ERROR;
             return state;
@@ -182,6 +168,7 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
     // -2, +1 stack: function return value (int)
     if(lua_pcall(LWrapper->L, 1, 1, 0) != LUA_OK)
     {
+        std::cerr << "ERROR: Failed to execute actionFunction in ActionNode's lua!\n";
         lua_pop(LWrapper->L, 1);
         state.stateType = State::ERROR;
         return state;

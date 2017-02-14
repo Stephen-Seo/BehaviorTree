@@ -40,6 +40,23 @@ int activate2(lua_State* L)
     return 0;
 }
 
+struct A
+{
+    A() :
+    state(0)
+    {}
+
+    int state;
+};
+
+int setState(lua_State* L)
+{
+    A* a = *((A**)lua_getextraspace(L));
+    a->state = lua_tointeger(L, -1);
+
+    return 0;
+}
+
 TEST(BehaviorLuaFactory, Factory)
 {
     BehaviorLuaFactory blf(false);
@@ -74,6 +91,22 @@ TEST(BehaviorLuaFactory, Factory)
         tree->activate();
 
         EXPECT_EQ(1, a0);
+    }
+
+    {
+        A a{};
+        *((A**)lua_getextraspace(blf.getLuaState())) = &a;
+
+        EXPECT_EQ(0, a.state);
+
+        blf.exposeFunction(setState, "setState");
+
+        BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript3.lua");
+        ASSERT_TRUE(tree);
+
+        EXPECT_EQ(tree->activate().stateType, BehaviorNode::State::READY_SUCCESS);
+
+        EXPECT_EQ(1, a.state);
     }
 }
 

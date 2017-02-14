@@ -26,6 +26,10 @@ public:
     void exposeFunction(int (*function)(lua_State*), std::string name);
     BehaviorNode::Ptr createTreeFromFile(std::string luaFilename);
     BehaviorNode::Ptr createTreeFromScript(std::string luaScript);
+
+    lua_State* getLuaState();
+    void resetLuaState();
+    void resetLuaCFunctions();
 private:
     LuaStateWrapper::Ptr LWrapper;
     bool isSilent;

@@ -42,16 +42,31 @@ BT::BehaviorLuaFactory& BT::BehaviorLuaFactory::operator = (const BehaviorLuaFac
 void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State*), const char* name)
 {
     functions.insert(std::make_pair(std::string(name), function));
+
+    if(LWrapper)
+    {
+        lua_pushcfunction(LWrapper->L, function);
+        lua_setglobal(LWrapper->L, name);
+    }
 }
 
 void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State*), std::string name)
 {
     functions.insert(std::make_pair(name, function));
+
+    if(LWrapper)
+    {
+        lua_pushcfunction(LWrapper->L, function);
+        lua_setglobal(LWrapper->L, name.c_str());
+    }
 }
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string luaFilename)
 {
-    initializeLuaState();
+    if(!LWrapper)
+    {
+        initializeLuaState();
+    }
 
     int type = luaL_loadfile(LWrapper->L, luaFilename.c_str());
     if(type != LUA_OK)
@@ -81,7 +96,10 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string lua
 
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string luaScript)
 {
-    initializeLuaState();
+    if(!LWrapper)
+    {
+        initializeLuaState();
+    }
 
     int type = luaL_loadbuffer(
         LWrapper->L,
@@ -112,6 +130,26 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string l
     }
 
     return createTree();
+}
+
+lua_State* BT::BehaviorLuaFactory::getLuaState()
+{
+    if(!LWrapper)
+    {
+        initializeLuaState();
+    }
+
+    return LWrapper->L;
+}
+
+void BT::BehaviorLuaFactory::resetLuaState()
+{
+    LWrapper.reset();
+}
+
+void BT::BehaviorLuaFactory::resetLuaCFunctions()
+{
+    functions.clear();
 }
 
 void BT::BehaviorLuaFactory::initializeLuaState()
@@ -229,17 +267,13 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
         std::unique_ptr<BT::ActionNode> an;
         if(!actionFunction.empty())
         {
-            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunction));
+            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunction, LWrapper));
         }
         else if(!actionFunctionName.empty())
         {
-            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunctionName, true));
+            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunctionName, LWrapper, true));
         }
 
-        for(auto iter = functions.begin(); iter != functions.end(); ++iter)
-        {
-            an->exposeFunctionToLuaScript(iter->second, iter->first);
-        }
         ptr = BehaviorNode::Ptr(an.release());
 
         return ptr;
