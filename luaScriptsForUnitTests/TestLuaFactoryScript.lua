@@ -23,6 +23,14 @@
 -- 3 - error
 
 
+actionFunction2 = [[
+actionFunction = function (isContinuing)
+    printOut("Action function 2 ran")
+    activate2()
+    return 0
+end
+]]
+
 -- global "BehaviorTree" will be parsed to create the tree
 BehaviorTree = {
     type = "sequence",
@@ -52,13 +60,7 @@ BehaviorTree = {
         },
         {
             type = "action",
-            actionFunction = [[
-                actionFunction = function (isContinuing)
-                    printOut("Action function 2 ran")
-                    activate2()
-                    return 0
-                end
-            ]]
+            actionFunction = actionFunction2
         }
     }
 }
