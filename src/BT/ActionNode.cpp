@@ -70,6 +70,11 @@ void BT::ActionNode::setLuaActionFunction(std::string lua, const LuaStateWrapper
     flags.reset(1);
 }
 
+const std::string& BT::ActionNode::getLuaActionFunctionName() const
+{
+    return luaActionFunctionName;
+}
+
 BT::BehaviorNode::State BT::ActionNode::performAction()
 {
     if(actionFunction)

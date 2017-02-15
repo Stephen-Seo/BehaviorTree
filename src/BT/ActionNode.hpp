@@ -35,6 +35,8 @@ public:
     void setActionFunction(ActionFunctionT actionFunction);
     void setLuaActionFunction(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename = false);
 
+    const std::string& getLuaActionFunctionName() const;
+
 protected:
     ActionFunctionT actionFunction;
     LuaStateWrapper::Ptr LWrapper;
