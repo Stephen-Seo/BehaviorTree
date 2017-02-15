@@ -2,11 +2,15 @@
 #ifndef BT_ACTION_NODE
 #define BT_ACTION_NODE
 
+#define BT_ACTION_NODE_ACTION_FUNCTION_PREFIX "BT_ActionNodeActionFunction_"
+
 #include "BehaviorNode.hpp"
 
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <bitset>
+#include <atomic>
 
 #include <lua.hpp>
 
@@ -35,7 +39,13 @@ protected:
     ActionFunctionT actionFunction;
     LuaStateWrapper::Ptr LWrapper;
     std::string lua;
-    bool luaIsFilename;
+    /*
+        0 - lua is file
+        1 - lua script loaded
+    */
+    std::bitset<2> flags;
+    std::string luaActionFunctionName;
+    static std::atomic_size_t luaScriptIDCounter;
 
     virtual State performAction() override;
     virtual State continueAction() override;
