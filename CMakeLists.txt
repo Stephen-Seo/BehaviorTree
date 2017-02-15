@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(BehaviorTree)
 
+set(BehaviorTree_VERSION_MAJOR 1)
+set(BehaviorTree_VERSION_MINOR 0)
+
 set(BehaviorTree_SOURCES
     src/BT/BehaviorNode.cpp
     src/BT/PriorityNode.cpp
@@ -22,6 +25,10 @@ set(UnitTest_SOURCES
 )
 
 add_library(BehaviorTree ${BehaviorTree_SOURCES})
+
+set_target_properties(BehaviorTree PROPERTIES
+    VERSION "${BehaviorTree_VERSION_MAJOR}.${BehaviorTree_VERSION_MINOR}"
+)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
@@ -105,4 +112,14 @@ if(GTEST_FOUND)
         )
     endif()
 endif()
+
+install(TARGETS BehaviorTree
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+install(DIRECTORY src/BT DESTINATION include
+    FILES_MATCHING
+    PATTERN "*.hpp"
+    PATTERN "*.inl"
+)
 
