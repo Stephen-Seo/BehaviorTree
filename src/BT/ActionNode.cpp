@@ -86,6 +86,18 @@ const std::string& BT::ActionNode::getLuaActionFunctionName() const
     return luaActionFunctionName;
 }
 
+lua_State* BT::ActionNode::getLuaState()
+{
+    if(LWrapper)
+    {
+        return LWrapper->L;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
 BT::BehaviorNode::State BT::ActionNode::performAction()
 {
     if(actionFunction)
