@@ -13,7 +13,11 @@ LWrapper(),
 lua(),
 flags(),
 luaActionFunctionName()
-{}
+{
+    std::size_t luaScriptID = luaScriptIDCounter++;
+    luaActionFunctionName = std::string(BT_ACTION_NODE_ACTION_FUNCTION_PREFIX)
+        + std::to_string(luaScriptID);
+}
 
 BT::ActionNode::ActionNode(ActionFunctionT actionFunction) :
 BehaviorNode(),
@@ -22,7 +26,11 @@ LWrapper(),
 lua(),
 flags(),
 luaActionFunctionName()
-{}
+{
+    std::size_t luaScriptID = luaScriptIDCounter++;
+    luaActionFunctionName = std::string(BT_ACTION_NODE_ACTION_FUNCTION_PREFIX)
+        + std::to_string(luaScriptID);
+}
 
 BT::ActionNode::ActionNode(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename) :
 BehaviorNode(),
@@ -33,6 +41,9 @@ flags(),
 luaActionFunctionName()
 {
     flags.set(0, isFilename);
+    std::size_t luaScriptID = luaScriptIDCounter++;
+    luaActionFunctionName = std::string(BT_ACTION_NODE_ACTION_FUNCTION_PREFIX)
+        + std::to_string(luaScriptID);
 }
 
 BT::ActionNode::~ActionNode()
@@ -177,9 +188,6 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
                 "HINT: Error ocurred during renaming to internal\n";
         }
 
-        std::size_t luaScriptID = luaScriptIDCounter++;
-        luaActionFunctionName = std::string(BT_ACTION_NODE_ACTION_FUNCTION_PREFIX)
-            + std::to_string(luaScriptID);
         lua_setglobal(LWrapper->L, luaActionFunctionName.c_str());
 
         flags.set(1);
