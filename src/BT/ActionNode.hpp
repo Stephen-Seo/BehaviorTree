@@ -50,11 +50,11 @@ protected:
     std::string luaActionFunctionName;
     static std::atomic_size_t luaScriptIDCounter;
 
-    virtual State performAction() override;
-    virtual State continueAction() override;
+    virtual State::StateType performAction() override;
+    virtual State::StateType continueAction() override;
 
 private:
-    State performLuaScript(bool isContinuing);
+    State::StateType performLuaScript(bool isContinuing);
 
 };
 

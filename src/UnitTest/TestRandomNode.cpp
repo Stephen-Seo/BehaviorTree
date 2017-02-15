@@ -77,7 +77,7 @@ TEST(BehaviorTree, RandomNode)
         for(unsigned int i = 0; i < 10; ++i)
         {
             nextIndex = dist(rengine);
-            EXPECT_EQ(rn.activate().stateType, BT::BehaviorNode::State::READY_SUCCESS);
+            EXPECT_EQ(rn.activate(), BT::BehaviorNode::State::READY_SUCCESS);
             checkFlags(nextIndex);
             atLeastOneIsTrue();
             resetFlags();
@@ -113,7 +113,7 @@ TEST(BehaviorTree, RandomNode)
 
         rengine.seed(1);
         dist = std::uniform_int_distribution<unsigned int>(0, 3);
-        BT::BehaviorNode::State state;
+        BT::BehaviorNode::State::StateType stateType;
         unsigned int nextIndex = 0;
         const unsigned int maxIterations = 1024;
         unsigned int iterations = 0;
@@ -123,13 +123,13 @@ TEST(BehaviorTree, RandomNode)
             nextIndex = dist(rengine);
             iterations = 0;
             do {
-                state = rn.activate();
+                stateType = rn.activate();
                 if(iterations++ > maxIterations)
                 {
                     break;
                 }
             }
-            while(state.stateType == BT::BehaviorNode::State::RUNNING);
+            while(stateType == BT::BehaviorNode::State::RUNNING);
             checkFlags(nextIndex);
             atLeastOneIsTrue();
             resetFlags();

@@ -25,14 +25,14 @@ TEST(BehaviorTree, ActionNode)
 
     for(std::size_t i = 0; i < 3; ++i)
     {
-        BehaviorNode::State state = an.activate();
+        BehaviorNode::State::StateType stateType = an.activate();
         if(i != 2)
         {
-            EXPECT_EQ(state.stateType, BehaviorNode::State::RUNNING);
+            EXPECT_EQ(stateType, BehaviorNode::State::RUNNING);
         }
         else
         {
-            EXPECT_EQ(state.stateType, BehaviorNode::State::READY_SUCCESS);
+            EXPECT_EQ(stateType, BehaviorNode::State::READY_SUCCESS);
         }
     }
 
@@ -57,8 +57,8 @@ TEST(BehaviorTree, ActionNode)
         }
     });
 
-    EXPECT_EQ(an.activate().stateType, BehaviorNode::State::RUNNING);
-    EXPECT_EQ(an.activate().stateType, BehaviorNode::State::READY_SUCCESS);
-    EXPECT_EQ(an.activate().stateType, BehaviorNode::State::READY_SUCCESS);
+    EXPECT_EQ(an.activate(), BehaviorNode::State::RUNNING);
+    EXPECT_EQ(an.activate(), BehaviorNode::State::READY_SUCCESS);
+    EXPECT_EQ(an.activate(), BehaviorNode::State::READY_SUCCESS);
 }
 

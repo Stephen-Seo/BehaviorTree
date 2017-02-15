@@ -14,7 +14,6 @@ lastRunningIndex(lastRunningIndex)
 {}
 
 BT::BehaviorNode::BehaviorNode() :
-parent(nullptr),
 children(),
 state()
 {}
@@ -24,7 +23,6 @@ BT::BehaviorNode::~BehaviorNode()
 
 BT::BehaviorNode::BehaviorNode(const BehaviorNode& other)
 {
-    parent = other.parent;
     state = other.state;
     children.clear();
 
@@ -36,7 +34,6 @@ BT::BehaviorNode::BehaviorNode(const BehaviorNode& other)
 
 BT::BehaviorNode& BT::BehaviorNode::operator = (const BehaviorNode& other)
 {
-    parent = other.parent;
     state = other.state;
     children.clear();
 
@@ -52,7 +49,6 @@ void BT::BehaviorNode::insert(Ptr& node)
 {
     if(node)
     {
-        node->parent = this;
         children.push_back(std::move(node));
     }
 }
@@ -61,7 +57,6 @@ void BT::BehaviorNode::insert(Ptr&& node)
 {
     if(node)
     {
-        node->parent = this;
         children.push_back(std::forward<Ptr>(node));
     }
 }
@@ -71,7 +66,7 @@ void BT::BehaviorNode::resetState()
     state = State();
 }
 
-BT::BehaviorNode::State BT::BehaviorNode::activate()
+BT::BehaviorNode::State::StateType BT::BehaviorNode::activate()
 {
     if(state.stateType == State::RUNNING)
     {

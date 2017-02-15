@@ -20,53 +20,53 @@ BT::BehaviorNode::Ptr BT::ConcurrentNode::getCopy()
     return Ptr(copy.release());
 }
 
-BT::BehaviorNode::State BT::ConcurrentNode::performAction()
+BT::BehaviorNode::State::StateType BT::ConcurrentNode::performAction()
 {
     for(std::size_t i = 0; i < children.size(); ++i)
     {
-        state = children[i]->activate();
+        state.stateType = children[i]->activate();
         switch(state.stateType)
         {
         case State::READY_SUCCESS:
             break;
         case State::RUNNING:
             state.lastRunningIndex = i;
-            return state;
+            return state.stateType;
         case State::FAILED:
         case State::ERROR:
-            return state;
+            return state.stateType;
         default:
             state.stateType = State::ERROR;
-            return state;
+            return state.stateType;
         }
     }
 
     // should be READY_SUCCESS
-    return state;
+    return state.stateType;
 }
 
-BT::BehaviorNode::State BT::ConcurrentNode::continueAction()
+BT::BehaviorNode::State::StateType BT::ConcurrentNode::continueAction()
 {
     for(std::size_t i = state.lastRunningIndex; i < children.size(); ++i)
     {
-        state = children[i]->activate();
+        state.stateType = children[i]->activate();
         switch(state.stateType)
         {
         case State::READY_SUCCESS:
             break;
         case State::RUNNING:
             state.lastRunningIndex = i;
-            return state;
+            return state.stateType;
         case State::FAILED:
         case State::ERROR:
-            return state;
+            return state.stateType;
         default:
             state.stateType = State::ERROR;
-            return state;
+            return state.stateType;
         }
     }
 
     // should be READY_SUCCESS
-    return state;
+    return state.stateType;
 }
 

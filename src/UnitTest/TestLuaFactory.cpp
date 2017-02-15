@@ -70,13 +70,13 @@ TEST(BehaviorLuaFactory, Factory)
         BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript.lua");
         ASSERT_TRUE(tree);
 
-        EXPECT_EQ(tree->activate().stateType, BehaviorNode::State::READY_SUCCESS);
+        EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 
         EXPECT_EQ(1, a0);
         EXPECT_EQ(1, a1);
         EXPECT_EQ(1, a2);
 
-        EXPECT_EQ(tree->activate().stateType, BehaviorNode::State::READY_SUCCESS);
+        EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 
         EXPECT_EQ(2, a0);
         EXPECT_EQ(2, a1);
@@ -88,7 +88,7 @@ TEST(BehaviorLuaFactory, Factory)
         BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript2.lua");
         ASSERT_TRUE(tree);
 
-        EXPECT_EQ(tree->activate().stateType, BehaviorNode::State::READY_SUCCESS);
+        EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 
         EXPECT_EQ(1, a0);
     }
@@ -104,7 +104,7 @@ TEST(BehaviorLuaFactory, Factory)
         BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript3.lua");
         ASSERT_TRUE(tree);
 
-        EXPECT_EQ(tree->activate().stateType, BehaviorNode::State::READY_SUCCESS);
+        EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 
         EXPECT_EQ(1, a.state);
     }

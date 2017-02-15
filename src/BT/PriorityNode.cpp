@@ -20,23 +20,23 @@ BT::BehaviorNode::Ptr BT::PriorityNode::getCopy()
     return Ptr(copy.release());
 }
 
-BT::BehaviorNode::State BT::PriorityNode::performAction()
+BT::BehaviorNode::State::StateType BT::PriorityNode::performAction()
 {
     resetState();
 
-    State cState{};
+    State::StateType cStateType;
     for(std::size_t i = 0; i < children.size(); ++i)
     {
-        cState = children[i]->activate();
-        switch(cState.stateType)
+        cStateType = children[i]->activate();
+        switch(cStateType)
         {
         case State::READY_SUCCESS:
             // state should be default (READY_SUCCESS)
-            return state;
+            return state.stateType;
         case State::RUNNING:
             state.stateType = State::RUNNING;
             state.lastRunningIndex = i;
-            return state;
+            return state.stateType;
         case State::FAILED:
         case State::ERROR:
         default:
@@ -45,24 +45,24 @@ BT::BehaviorNode::State BT::PriorityNode::performAction()
     }
 
     // here state should also be default (READY_SUCCESS)
-    return state;
+    return state.stateType;
 }
 
-BT::BehaviorNode::State BT::PriorityNode::continueAction()
+BT::BehaviorNode::State::StateType BT::PriorityNode::continueAction()
 {
-    State cState{};
+    State::StateType cStateType;
     for(std::size_t i = state.lastRunningIndex; i < children.size(); ++i)
     {
-        cState = children[i]->activate();
-        switch(cState.stateType)
+        cStateType = children[i]->activate();
+        switch(cStateType)
         {
         case State::READY_SUCCESS:
             state.stateType = State::READY_SUCCESS;
-            return state;
+            return state.stateType;
         case State::RUNNING:
             state.stateType = State::RUNNING;
             state.lastRunningIndex = i;
-            return state;
+            return state.stateType;
         case State::FAILED:
         case State::ERROR:
         default:
@@ -70,6 +70,6 @@ BT::BehaviorNode::State BT::PriorityNode::continueAction()
         }
     }
     state.stateType = State::READY_SUCCESS;
-    return state;
+    return state.stateType;
 }
 

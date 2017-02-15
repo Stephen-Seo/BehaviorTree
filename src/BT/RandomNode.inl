@@ -46,34 +46,33 @@ void BT::RandomNode<RandomEngine>::setSeed(typename RandomEngine::result_type se
 }
 
 template <typename RandomEngine>
-BT::BehaviorNode::State BT::RandomNode<RandomEngine>::performAction()
+BT::BehaviorNode::State::StateType BT::RandomNode<RandomEngine>::performAction()
 {
     if(children.empty())
     {
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
     std::uniform_int_distribution<std::size_t> dist(0, children.size() - 1);
     std::size_t index = dist(rengine);
-    state = children[index]->activate();
+    state.stateType = children[index]->activate();
     if(state.stateType == State::RUNNING)
     {
         state.lastRunningIndex = index;
     }
-    return state;
+    return state.stateType;
 }
 
 template <typename RandomEngine>
-BT::BehaviorNode::State BT::RandomNode<RandomEngine>::continueAction()
+BT::BehaviorNode::State::StateType BT::RandomNode<RandomEngine>::continueAction()
 {
     if(children.empty())
     {
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
-    State cState = children[state.lastRunningIndex]->activate();
-    state.stateType = cState.stateType;
+    state.stateType = children[state.lastRunningIndex]->activate();
 
-    return state;
+    return state.stateType;
 }
 

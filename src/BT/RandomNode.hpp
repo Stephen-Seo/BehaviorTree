@@ -26,8 +26,8 @@ public:
     void setSeed(typename RandomEngine::result_type seed);
 
 protected:
-    virtual State performAction() override;
-    virtual State continueAction() override;
+    virtual State::StateType performAction() override;
+    virtual State::StateType continueAction() override;
 
 private:
     typename RandomEngine::result_type seed;

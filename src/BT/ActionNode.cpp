@@ -98,12 +98,12 @@ lua_State* BT::ActionNode::getLuaState()
     }
 }
 
-BT::BehaviorNode::State BT::ActionNode::performAction()
+BT::BehaviorNode::State::StateType BT::ActionNode::performAction()
 {
     if(actionFunction)
     {
         state.stateType = actionFunction(false);
-        return state;
+        return state.stateType;
     }
     else if(!lua.empty())
     {
@@ -112,16 +112,16 @@ BT::BehaviorNode::State BT::ActionNode::performAction()
     else
     {
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
 }
 
-BT::BehaviorNode::State BT::ActionNode::continueAction()
+BT::BehaviorNode::State::StateType BT::ActionNode::continueAction()
 {
     if(actionFunction)
     {
         state.stateType = actionFunction(true);
-        return state;
+        return state.stateType;
     }
     else if(!lua.empty())
     {
@@ -130,16 +130,16 @@ BT::BehaviorNode::State BT::ActionNode::continueAction()
     else
     {
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
 }
 
-BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
+BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isContinuing)
 {
     if(!LWrapper)
     {
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
 
     int type = 0;
@@ -156,14 +156,14 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
                     std::cerr << "HINT: Appears to be syntax error!\n";
                 }
                 state.stateType = State::ERROR;
-                return state;
+                return state.stateType;
             }
             else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
             {
                 std::cerr << "ERROR: Lua file failed to execute in ActionNode!\n";
                 lua_pop(LWrapper->L, 1);
                 state.stateType = State::ERROR;
-                return state;
+                return state.stateType;
             }
         }
         else
@@ -182,14 +182,14 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
                     std::cerr << "HINT: Appears to be syntax error!\n";
                 }
                 state.stateType = State::ERROR;
-                return state;
+                return state.stateType;
             }
             else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
             {
                 std::cerr << "ERROR: Lua script failed to execute in ActionNode!\n";
                 lua_pop(LWrapper->L, 1);
                 state.stateType = State::ERROR;
-                return state;
+                return state.stateType;
             }
         }
 
@@ -211,7 +211,7 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
     {
         std::cerr << "ERROR: Global \"actionFunction\" is not a function!\n";
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
 
     // +1 stack: argument
@@ -223,13 +223,13 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
         std::cerr << "ERROR: Failed to execute actionFunction in ActionNode's lua!\n";
         lua_pop(LWrapper->L, 1);
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
     else if(lua_isinteger(LWrapper->L, -1) != 1)
     {
         lua_pop(LWrapper->L, 1);
         state.stateType = State::ERROR;
-        return state;
+        return state.stateType;
     }
 
     type = lua_tointeger(LWrapper->L, -1);
@@ -252,6 +252,6 @@ BT::BehaviorNode::State BT::ActionNode::performLuaScript(bool isContinuing)
         break;
     }
 
-    return state;
+    return state.stateType;
 }
 

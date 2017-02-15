@@ -149,7 +149,7 @@ continue Running nodes.</panel_attributes>
       <h>290</h>
     </coordinates>
     <panel_attributes>Priority Selector
-  Iterate through child nodes, on sucess,
+  Iterate through child nodes, on success,
   or running, stop and return state.
 Sequence Selector
   Iterate through child nodes, on running,

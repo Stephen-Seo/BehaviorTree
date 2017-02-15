@@ -16,8 +16,8 @@ public:
     virtual Ptr getCopy() override;
 
 private:
-    virtual State performAction() override;
-    virtual State continueAction() override;
+    virtual State::StateType performAction() override;
+    virtual State::StateType continueAction() override;
 
 };
 

@@ -20,26 +20,26 @@ BT::BehaviorNode::Ptr BT::SequenceNode::getCopy()
     return Ptr(copy.release());
 }
 
-BT::BehaviorNode::State BT::SequenceNode::performAction()
+BT::BehaviorNode::State::StateType BT::SequenceNode::performAction()
 {
     bool failed = false;
     for(std::size_t i = 0; i < children.size(); ++i)
     {
-        state = children[i]->activate();
+        state.stateType = children[i]->activate();
         switch(state.stateType)
         {
         case State::READY_SUCCESS:
             break;
         case State::RUNNING:
             state.lastRunningIndex = i;
-            return state;
+            return state.stateType;
         case State::FAILED:
             failed = true;
             break;
         case State::ERROR:
         default:
             state.stateType = State::ERROR;
-            return state;
+            return state.stateType;
         }
     }
 
@@ -51,29 +51,29 @@ BT::BehaviorNode::State BT::SequenceNode::performAction()
     {
         state.stateType = State::READY_SUCCESS;
     }
-    return state;
+    return state.stateType;
 }
 
-BT::BehaviorNode::State BT::SequenceNode::continueAction()
+BT::BehaviorNode::State::StateType BT::SequenceNode::continueAction()
 {
     bool failed = false;
     for(std::size_t i = state.lastRunningIndex; i < children.size(); ++i)
     {
-        state = children[i]->activate();
+        state.stateType = children[i]->activate();
         switch(state.stateType)
         {
         case State::READY_SUCCESS:
             break;
         case State::RUNNING:
             state.lastRunningIndex = i;
-            return state;
+            return state.stateType;
         case State::FAILED:
             failed = true;
             break;
         case State::ERROR:
         default:
             state.stateType = State::ERROR;
-            return state;
+            return state.stateType;
         }
     }
 
@@ -85,6 +85,6 @@ BT::BehaviorNode::State BT::SequenceNode::continueAction()
     {
         state.stateType = State::READY_SUCCESS;
     }
-    return state;
+    return state.stateType;
 }
 
