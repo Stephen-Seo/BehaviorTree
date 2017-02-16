@@ -56,7 +56,7 @@ BehaviorTree = {
         },
         {
             type = "action",
-            actionFunctionName = "TestLuaFactoryAction2.lua"
+            actionFunctionName = "TestLuaFactoryAction1.lua"
         },
         {
             type = "action",
