@@ -71,44 +71,34 @@ if(GTEST_FOUND)
     if(WIN32)
         add_custom_command(
             TARGET UnitTest POST_BUILD
-            COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript.lua" "${PROJECT_BINARY_DIR}"
-            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript.lua"
+            COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript0.lua" "${PROJECT_BINARY_DIR}"
+            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript0.lua"
         )
         add_custom_command(
             TARGET UnitTest POST_BUILD
-            COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryAction1.lua" "${PROJECT_BINARY_DIR}"
-            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryAction1.lua"
+            COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript1.lua" "${PROJECT_BINARY_DIR}"
+            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript1.lua"
         )
         add_custom_command(
             TARGET UnitTest POST_BUILD
             COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript2.lua" "${PROJECT_BINARY_DIR}"
             BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript2.lua"
         )
-        add_custom_command(
-            TARGET UnitTest POST_BUILD
-            COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript3.lua" "${PROJECT_BINARY_DIR}"
-            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript3.lua"
-        )
     else()
         add_custom_command(
             TARGET UnitTest POST_BUILD
-            COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript.lua" "${PROJECT_BINARY_DIR}"
-            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript.lua"
+            COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript0.lua" "${PROJECT_BINARY_DIR}"
+            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript0.lua"
         )
         add_custom_command(
             TARGET UnitTest POST_BUILD
-            COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryAction1.lua" "${PROJECT_BINARY_DIR}"
-            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryAction1.lua"
+            COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript1.lua" "${PROJECT_BINARY_DIR}"
+            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript1.lua"
         )
         add_custom_command(
             TARGET UnitTest POST_BUILD
             COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript2.lua" "${PROJECT_BINARY_DIR}"
             BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript2.lua"
-        )
-        add_custom_command(
-            TARGET UnitTest POST_BUILD
-            COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript3.lua" "${PROJECT_BINARY_DIR}"
-            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript3.lua"
         )
     endif()
 endif()

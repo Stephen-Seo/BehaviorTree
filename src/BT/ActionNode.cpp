@@ -10,8 +10,6 @@ BT::ActionNode::ActionNode() :
 BehaviorNode(),
 actionFunction(),
 LWrapper(),
-lua(),
-flags(),
 luaActionFunctionName()
 {
     std::size_t luaScriptID = luaScriptIDCounter++;
@@ -23,8 +21,6 @@ BT::ActionNode::ActionNode(ActionFunctionT actionFunction) :
 BehaviorNode(),
 actionFunction(actionFunction),
 LWrapper(),
-lua(),
-flags(),
 luaActionFunctionName()
 {
     std::size_t luaScriptID = luaScriptIDCounter++;
@@ -32,15 +28,12 @@ luaActionFunctionName()
         + std::to_string(luaScriptID);
 }
 
-BT::ActionNode::ActionNode(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename) :
+BT::ActionNode::ActionNode(const LuaStateWrapper::Ptr& LWrapper) :
 BehaviorNode(),
 actionFunction(),
 LWrapper(LWrapper),
-lua(lua),
-flags(),
 luaActionFunctionName()
 {
-    flags.set(0, isFilename);
     std::size_t luaScriptID = luaScriptIDCounter++;
     luaActionFunctionName = std::string(BT_ACTION_NODE_ACTION_FUNCTION_PREFIX)
         + std::to_string(luaScriptID);
@@ -55,8 +48,6 @@ BT::BehaviorNode::Ptr BT::ActionNode::getCopy()
 
     copy->actionFunction = actionFunction;
     copy->LWrapper = LWrapper;
-    copy->lua = lua;
-    copy->flags = flags;
     copy->luaActionFunctionName = luaActionFunctionName;
 
     for(std::size_t i = 0; i < children.size(); ++i)
@@ -73,12 +64,9 @@ void BT::ActionNode::setActionFunction(ActionFunctionT actionFunction)
     state = State();
 }
 
-void BT::ActionNode::setLuaActionFunction(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename)
+void BT::ActionNode::setLuaState(const LuaStateWrapper::Ptr& LWrapper)
 {
-    this->lua= lua;
-    flags.set(0, isFilename);
     this->LWrapper = LWrapper;
-    flags.reset(1);
 }
 
 const std::string& BT::ActionNode::getLuaActionFunctionName() const
@@ -105,7 +93,7 @@ BT::BehaviorNode::State::StateType BT::ActionNode::performAction()
         state.stateType = actionFunction(false);
         return state.stateType;
     }
-    else if(!lua.empty())
+    else if(LWrapper)
     {
         return performLuaScript(false);
     }
@@ -123,7 +111,7 @@ BT::BehaviorNode::State::StateType BT::ActionNode::continueAction()
         state.stateType = actionFunction(true);
         return state.stateType;
     }
-    else if(!lua.empty())
+    else if(LWrapper)
     {
         return performLuaScript(true);
     }
@@ -143,73 +131,13 @@ BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isConti
     }
 
     int type = 0;
-    if(!flags[1])
-    {
-        if(flags[0])
-        {
-            type = luaL_loadfile(LWrapper->L, lua.c_str());
-            if(type != LUA_OK)
-            {
-                std::cerr << "ERROR: Failed to load lua file in ActionNode!\n";
-                if(type == LUA_ERRSYNTAX)
-                {
-                    std::cerr << "HINT: Appears to be syntax error!\n";
-                }
-                state.stateType = State::ERROR;
-                return state.stateType;
-            }
-            else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
-            {
-                std::cerr << "ERROR: Lua file failed to execute in ActionNode!\n";
-                lua_pop(LWrapper->L, 1);
-                state.stateType = State::ERROR;
-                return state.stateType;
-            }
-        }
-        else
-        {
-            type = luaL_loadbuffer(
-                LWrapper->L,
-                lua.c_str(),
-                lua.size(),
-                "BT::ActionNode"
-            );
-            if(type != LUA_OK)
-            {
-                std::cerr << "ERROR: Failed to load lua script in ActionNode!\n";
-                if(type == LUA_ERRSYNTAX)
-                {
-                    std::cerr << "HINT: Appears to be syntax error!\n";
-                }
-                state.stateType = State::ERROR;
-                return state.stateType;
-            }
-            else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
-            {
-                std::cerr << "ERROR: Lua script failed to execute in ActionNode!\n";
-                lua_pop(LWrapper->L, 1);
-                state.stateType = State::ERROR;
-                return state.stateType;
-            }
-        }
-
-        type = lua_getglobal(LWrapper->L, "actionFunction");
-        if(type != LUA_TFUNCTION)
-        {
-            std::cerr << "ERROR: Global \"actionFunction\" is not a function!\n"
-                "HINT: Error ocurred during renaming to internal\n";
-        }
-
-        lua_setglobal(LWrapper->L, luaActionFunctionName.c_str());
-
-        flags.set(1);
-    }
 
     // +1 stack: function
     type = lua_getglobal(LWrapper->L, luaActionFunctionName.c_str());
     if(type != LUA_TFUNCTION)
     {
-        std::cerr << "ERROR: Global \"actionFunction\" is not a function!\n";
+        std::cerr << "ERROR: Global \"" << luaActionFunctionName
+            << "\" is not a function!\n";
         state.stateType = State::ERROR;
         return state.stateType;
     }

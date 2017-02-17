@@ -10,12 +10,10 @@
 -- Any node that isn't type "action" must have a field called
 --   "children" that is a table of tables.
 -- Any node that is type "action" must instead have a field
---   "actionFunction" or "actionFunctionName".
+--   "actionFunction" that is a function.
 
--- "actionFunction" must be a valid lua script with global
---   actionFunction that is a function returning 0 to 3.
--- "actionFunctionName" must be a valid lua script filename
---   with global actionFunction.
+-- "actionFunction" must be a lua function that takes a boolean parameter and
+-- returns 0 to 3.
 -- action function return values
 -- 0 - success
 -- 1 - isRunning
@@ -42,13 +40,11 @@
 -- engines
 
 
-actionFunction2 = [[
-actionFunction = function (isContinuing)
+actionFunction2 = function (isContinuing)
     printOut("Action function 2 ran")
     activate2()
     return 0
 end
-]]
 
 -- global "BehaviorTree" will be parsed to create the tree
 BehaviorTree = {
@@ -60,22 +56,24 @@ BehaviorTree = {
             type = "action",
             -- note "printOut" and "activate0" are exposed functions from
             -- src/UnitTest/TestLuaFactory.cpp
-            actionFunction = [[
-                actionFunction = function (isContinuing)
-                    printOut("Action function 0 ran")
-                    if isContinuing then
-                        printOut("Action function 0 isContinuing true")
-                    else
-                        printOut("Action function 0 isContinuing false")
-                    end
-                    activate0()
-                    return 0
+            actionFunction = function (isContinuing)
+                printOut("Action function 0 ran")
+                if isContinuing then
+                    printOut("Action function 0 isContinuing true")
+                else
+                    printOut("Action function 0 isContinuing false")
                 end
-            ]]
+                activate0()
+                return 0
+            end
         },
         {
             type = "action",
-            actionFunctionName = "TestLuaFactoryAction1.lua"
+            actionFunction = function (isContinuing)
+                printOut("Action function 1 ran")
+                activate1()
+                return 0
+            end
         },
         {
             type = "action",

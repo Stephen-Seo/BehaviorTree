@@ -1,31 +1,9 @@
 
 BehaviorTree = {
-    type = "sequence",
-    children = {
-        {
-            type = "priority",
-            children = {
-                {
-                    type = "random",
-                    children = {
-                        {
-                            type = "concurrent",
-                            children = {
-                                {
-                                    type = "action",
-                                    actionFunction = [[
-actionFunction = function (isContinuing)
-    printOut("Action function ran")
-    activate0()
-    return 0
-end
-                                    ]]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    type = "action",
+    actionFunction = function (isContinuing)
+        setState(1)
+        printOut("Set state to 1")
+        return 0
+    end
 }

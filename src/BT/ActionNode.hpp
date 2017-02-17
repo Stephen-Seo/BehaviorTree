@@ -9,7 +9,6 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
-#include <bitset>
 #include <atomic>
 
 #include <lua.hpp>
@@ -27,13 +26,13 @@ public:
 
     ActionNode();
     ActionNode(ActionFunctionT actionFunction);
-    ActionNode(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename = false);
+    ActionNode(const LuaStateWrapper::Ptr& LWrapper);
     virtual ~ActionNode();
 
     virtual Ptr getCopy() override;
 
     void setActionFunction(ActionFunctionT actionFunction);
-    void setLuaActionFunction(std::string lua, const LuaStateWrapper::Ptr& LWrapper, bool isFilename = false);
+    void setLuaState(const LuaStateWrapper::Ptr& LWrapper);
 
     const std::string& getLuaActionFunctionName() const;
     lua_State* getLuaState();
@@ -41,12 +40,6 @@ public:
 protected:
     ActionFunctionT actionFunction;
     LuaStateWrapper::Ptr LWrapper;
-    std::string lua;
-    /*
-        0 - lua is file
-        1 - lua script loaded
-    */
-    std::bitset<2> flags;
     std::string luaActionFunctionName;
     static std::atomic_size_t luaScriptIDCounter;
 

@@ -419,61 +419,28 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     }
     else if(std::strcmp(nodeType, "action") == 0)
     {
-        std::string actionFunction{};
-        std::string actionFunctionName{};
+        std::unique_ptr<BT::ActionNode> an(new BT::ActionNode(LWrapper));
+
         // -1 stack: field "type"
         lua_pop(LWrapper->L, 1);
         // +1 stack: field "actionFunction"
         type = lua_getfield(LWrapper->L, -1, "actionFunction");
-        if(type == LUA_TNIL)
+        if(type != LUA_TFUNCTION)
         {
             if(!isSilent)
             {
-                std::cerr << "WARNING: Field \"actionFunction\" is nil, trying \"actionFunctionName\"...\n";
-            }
-            lua_pop(LWrapper->L, 1); // -1 stack: field "actionFunction"
-            // +1 stack: field "actionFunctionName"
-            type = lua_getfield(LWrapper->L, -1, "actionFunctionName");
-            if(type != LUA_TSTRING)
-            {
-                if(!isSilent)
-                {
-                    std::cerr << "ERROR: Field \"actionFunctionName\" is not a string!\n";
-                }
-                lua_pop(LWrapper->L, 1);
-                return ptr;
-            }
-            actionFunctionName = std::string(lua_tostring(LWrapper->L, -1));
-            lua_pop(LWrapper->L, 1); // -1 stack: field "actionFunctionName"
-        }
-        else if(type != LUA_TSTRING)
-        {
-            if(!isSilent)
-            {
-                std::cerr << "ERROR: Field \"actionFunction\" is not a string!\n";
+                std::cerr << "ERROR: Field \"actionFunction\" is not a function!\n";
             }
             lua_pop(LWrapper->L, 1);
             return ptr;
         }
-        else // is type LUA_TSTRING
+        else // is type LUA_TFUNCTION
         {
-            actionFunction = std::string(lua_tostring(LWrapper->L, -1));
             // -1 stack
-            lua_pop(LWrapper->L, 1);
-        }
-
-        std::unique_ptr<BT::ActionNode> an;
-        if(!actionFunction.empty())
-        {
-            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunction, LWrapper));
-        }
-        else if(!actionFunctionName.empty())
-        {
-            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(actionFunctionName, LWrapper, true));
+            lua_setglobal(LWrapper->L, an->getLuaActionFunctionName().c_str());
         }
 
         ptr = BehaviorNode::Ptr(an.release());
-
         return ptr;
     }
     else
