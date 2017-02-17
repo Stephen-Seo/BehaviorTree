@@ -45,8 +45,12 @@ void BT::LoopNode::performLoop(std::size_t index)
             state.lastRunningIndex = index;
             isRunningOrFail = true;
         }
-        else if(state.stateType == State::FAILED
-            || state.stateType == State::ERROR)
+        else if(state.stateType == State::FAILED)
+        {
+            state.stateType = State::READY_SUCCESS;
+            isRunningOrFail = true;
+        }
+        else if(state.stateType == State::ERROR)
         {
             isRunningOrFail = true;
         }
