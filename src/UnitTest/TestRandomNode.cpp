@@ -11,7 +11,7 @@
 
 TEST(BehaviorTree, RandomNode)
 {
-    std::mt19937 rengine(0);
+    std::default_random_engine rengine(0);
     std::uniform_int_distribution<unsigned int> dist(0, 3);
     std::bitset<4> flags;
 

@@ -12,7 +12,7 @@ namespace BT
 /**
     For default use, declare as type "RandomEngine<>"
 */
-template <typename RandomEngine = std::mt19937>
+template <typename RandomEngine = std::default_random_engine>
 class RandomNode : public LogicNode
 {
 public:

@@ -209,7 +209,205 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     }
     else if(std::strcmp(nodeType, "random") == 0)
     {
-        ptr = BehaviorNode::Ptr(new BT::SequenceNode());
+        bool gotSeed = false;
+        std::size_t seed = 0;
+        // +1 stack: field "seed"
+        type = lua_getfield(LWrapper->L, -2, "seed");
+        if(type != LUA_TNIL)
+        {
+            if(lua_isinteger(LWrapper->L, -1) == 1)
+            {
+                gotSeed = true;
+                seed = lua_tointeger(LWrapper->L, -1);
+            }
+            else
+            {
+                if(!isSilent)
+                {
+                    std::cerr << "ERROR: Field \"seed\" specified for random "
+                        "node but is invalid type! Using defaults (randomized "
+                        "seed)\n";
+                }
+            }
+        }
+        else
+        {
+            if(!isSilent)
+            {
+                std::cerr << "WARNING: Field \"seed\" not specified, using "
+                    "defaults (randomized seed)\n";
+            }
+        }
+        lua_pop(LWrapper->L, 1); // -1 stack
+
+        // +1 stack: field "randomType"
+        type = lua_getfield(LWrapper->L, -2, "randomType");
+        if(type == LUA_TSTRING)
+        {
+            const char* rtype = lua_tostring(LWrapper->L, -1);
+            if(std::strcmp(rtype, "minstd_rand0") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::minstd_rand0>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::minstd_rand0>());
+                }
+            }
+            else if(std::strcmp(rtype, "minstd_rand") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::minstd_rand>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::minstd_rand>());
+                }
+            }
+            else if(std::strcmp(rtype, "mt19937") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::mt19937>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::mt19937>());
+                }
+            }
+            else if(std::strcmp(rtype, "mt19937_64") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::mt19937_64>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::mt19937_64>());
+                }
+            }
+            else if(std::strcmp(rtype, "ranlux24_base") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux24_base>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux24_base>());
+                }
+            }
+            else if(std::strcmp(rtype, "ranlux48_base") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux48_base>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux48_base>());
+                }
+            }
+            else if(std::strcmp(rtype, "ranlux24") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux24>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux24>());
+                }
+            }
+            else if(std::strcmp(rtype, "ranlux48") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux48>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::ranlux48>());
+                }
+            }
+            else if(std::strcmp(rtype, "knuth_b") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::knuth_b>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<std::knuth_b>());
+                }
+            }
+            else if(std::strcmp(rtype, "default") == 0)
+            {
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<>());
+                }
+            }
+            else
+            {
+                if(!isSilent)
+                {
+                    std::cerr << "ERROR: Field \"randomType\" has invalid "
+                        "string! Using defaults\n";
+                }
+
+                if(gotSeed)
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<>(seed));
+                }
+                else
+                {
+                    ptr = BehaviorNode::Ptr(new BT::RandomNode<>());
+                }
+            }
+        }
+        else if(type != LUA_TNIL)
+        {
+            if(!isSilent)
+            {
+                std::cerr << "ERROR: Field \"randomType\" specified for random "
+                    "node but is invalid type! Using defaults\n";
+            }
+
+            if(gotSeed)
+            {
+                ptr = BehaviorNode::Ptr(new BT::RandomNode<>(seed));
+            }
+            else
+            {
+                ptr = BehaviorNode::Ptr(new BT::RandomNode<>());
+            }
+        }
+        else
+        {
+            if(!isSilent)
+            {
+                std::cerr << "WARNING: Field \"randomType\" not specified, "
+                    "using defaults\n";
+            }
+
+            if(gotSeed)
+            {
+                ptr = BehaviorNode::Ptr(new BT::RandomNode<>(seed));
+            }
+            else
+            {
+                ptr = BehaviorNode::Ptr(new BT::RandomNode<>());
+            }
+        }
+        lua_pop(LWrapper->L, 1); // -1 stack
     }
     else if(std::strcmp(nodeType, "loop") == 0)
     {

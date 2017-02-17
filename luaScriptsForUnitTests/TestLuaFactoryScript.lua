@@ -22,6 +22,23 @@
 -- 2 - fail
 -- 3 - error
 
+-- RandomNodes can have optional fields:
+-- seed: can be an integer that sets the seed of the RandomNode's
+--   random engine. If not specified, the seed is randomized.
+-- randomType: can be a string specifying the random engine used
+--   in the RandomNode.
+-- valid random types:
+--   default (same as not specifying a randomType)
+--   minstd_rand0
+--   minstd_rand
+--   mt19937
+--   mt19937_64
+--   ranlux24_base
+--   ranlux48_base
+--   ranlux24
+--   ranlux48
+--   knuth_b
+
 
 actionFunction2 = [[
 actionFunction = function (isContinuing)
