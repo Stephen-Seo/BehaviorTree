@@ -38,6 +38,8 @@
 --   ranlux24
 --   ranlux48
 --   knuth_b
+-- see http://en.cppreference.com/w/cpp/numeric/random for info on these random
+-- engines
 
 
 actionFunction2 = [[
