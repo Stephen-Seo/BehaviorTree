@@ -147,7 +147,7 @@ void BT::BehaviorLuaFactory::resetLuaState()
     LWrapper.reset();
 }
 
-void BT::BehaviorLuaFactory::resetLuaCFunctions()
+void BT::BehaviorLuaFactory::clearLuaCFunctions()
 {
     functions.clear();
 }
