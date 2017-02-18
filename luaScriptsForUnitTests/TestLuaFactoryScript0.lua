@@ -7,10 +7,13 @@
 --   "loop"
 --   "concurrent"
 --   "action"
+--   "custom"
 -- Any node that isn't type "action" must have a field called
 --   "children" that is a table of tables.
 -- Any node that is type "action" must instead have a field
 --   "actionFunction" that is a function.
+-- See luaScriptsForUnitTests/TestLuaFactoryScript3.lua for info on "custom"
+--   nodes.
 
 -- "actionFunction" must be a lua function that takes a boolean parameter and
 -- returns 0 to 3.

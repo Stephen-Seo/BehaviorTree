@@ -1,4 +1,18 @@
 
+-- Custom nodes must have type = "custom", an "activate" function, and
+-- a children field which is a table of tables (nodes).
+
+-- The activate function must take a boolean parameter and return between 0-3.
+-- 0 - Ready or Success
+-- 1 - Running
+-- 2 - Failed
+-- 3 - Error
+
+-- The function "getChildrenSize" is available to get the number of children
+-- the current node has.
+-- The function "activateChild" is available to activate a node.
+-- Note that child indices are from 0 to size - 1, not like lua indices.
+
 BehaviorTree = {
     type = "custom",
     activate = function (isContinuing)
