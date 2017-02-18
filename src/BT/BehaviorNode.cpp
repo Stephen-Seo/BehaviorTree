@@ -15,7 +15,8 @@ lastRunningIndex(lastRunningIndex)
 
 BT::BehaviorNode::BehaviorNode() :
 children(),
-state()
+state(),
+id(BT_BEHAVIOR_NODE_DEFAULT_ID)
 {}
 
 BT::BehaviorNode::~BehaviorNode()
@@ -24,6 +25,7 @@ BT::BehaviorNode::~BehaviorNode()
 BT::BehaviorNode::BehaviorNode(const BehaviorNode& other)
 {
     state = other.state;
+    id = other.id;
     children.clear();
 
     for(std::size_t i = 0; i < other.children.size(); ++i)
@@ -35,6 +37,7 @@ BT::BehaviorNode::BehaviorNode(const BehaviorNode& other)
 BT::BehaviorNode& BT::BehaviorNode::operator = (const BehaviorNode& other)
 {
     state = other.state;
+    id = other.id;
     children.clear();
 
     for(std::size_t i = 0; i < other.children.size(); ++i)
@@ -75,6 +78,37 @@ BT::BehaviorNode::State::StateType BT::BehaviorNode::activate()
     else
     {
         return performAction();
+    }
+}
+
+void BT::BehaviorNode::setID(std::string id)
+{
+    this->id = id;
+}
+
+const std::string& BT::BehaviorNode::getID() const
+{
+    return id;
+}
+
+BT::BehaviorNode* BT::BehaviorNode::findByID(std::string id)
+{
+    if(this->id == id)
+    {
+        return this;
+    }
+    else
+    {
+        BehaviorNode* ptr = nullptr;
+        for(auto iter = children.begin(); iter != children.end(); ++iter)
+        {
+            ptr = (*iter)->findByID(id);
+            if(ptr)
+            {
+                break;
+            }
+        }
+        return ptr;
     }
 }
 

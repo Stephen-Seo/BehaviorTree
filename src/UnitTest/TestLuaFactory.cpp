@@ -138,3 +138,50 @@ TEST(BehaviorLuaFactory, FactoryCustom)
     }
 }
 
+TEST(BehaviorLuaFactory, ID)
+{
+    a0 = 0;
+    a1 = 0;
+    a2 = 0;
+
+    BehaviorLuaFactory blf(false);
+
+    blf.exposeFunction(printOut, "printOut");
+    blf.exposeFunction(activate0, "activate0");
+    blf.exposeFunction(activate1, "activate1");
+    blf.exposeFunction(activate2, "activate2");
+
+    {
+        BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript4.lua");
+        ASSERT_TRUE(tree);
+
+        BehaviorNode* ptr = tree->findByID("action0");
+        ASSERT_TRUE(ptr);
+        ptr->activate();
+        EXPECT_EQ(1, a0);
+        EXPECT_EQ(0, a1);
+        EXPECT_EQ(0, a2);
+
+        ptr = tree->findByID("action1");
+        ASSERT_TRUE(ptr);
+        ptr->activate();
+        EXPECT_EQ(1, a0);
+        EXPECT_EQ(1, a1);
+        EXPECT_EQ(0, a2);
+
+        ptr = tree->findByID("action2");
+        ASSERT_TRUE(ptr);
+        ptr->activate();
+        EXPECT_EQ(1, a0);
+        EXPECT_EQ(1, a1);
+        EXPECT_EQ(1, a2);
+
+        ptr = tree->findByID("root");
+        ASSERT_TRUE(ptr);
+        ptr->activate();
+        EXPECT_EQ(2, a0);
+        EXPECT_EQ(2, a1);
+        EXPECT_EQ(2, a2);
+    }
+}
+

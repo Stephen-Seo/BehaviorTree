@@ -2,10 +2,13 @@
 #ifndef BT_BEHAVIOR_NODE
 #define BT_BEHAVIOR_NODE
 
+#define BT_BEHAVIOR_NODE_DEFAULT_ID "BehaviorNodeDefaultID"
+
 #include <cstdlib>
 
 #include <vector>
 #include <memory>
+#include <string>
 
 namespace BT
 {
@@ -133,12 +136,20 @@ public:
     */
     virtual Ptr getCopy() = 0;
 
+    void setID(std::string id);
+    const std::string& getID() const;
+
+    BehaviorNode* findByID(std::string id);
+
 protected:
     std::vector<Ptr> children;
     State state;
 
     virtual State::StateType performAction() = 0;
     virtual State::StateType continueAction() = 0;
+
+private:
+    std::string id;
 
 };
 

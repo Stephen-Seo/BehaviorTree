@@ -19,6 +19,20 @@
 -- behavior tree. Thus if the root node is invalid, the resulting
 -- std::unique_ptr will not hold a node.
 
+-- Every node type may have an optional field "id" that is a string
+-- representing the id of that node.
+-- This id is used for finding and getting a specific node in a tree.
+-- BT::BehaviorNode has a function "findByID" that returns the node with
+-- the given id, or null if there is no node with that id.
+-- Thus, "findByID" can be called on the root node to find a specific node
+-- in the tree. Note that the node is found via depth-first search.
+-- Also note that if two nodes have the same id that is being searched for,
+-- only one of them will be picked consistently on each search.
+-- By default, all nodes have a default id that is usually
+-- "BehaviorNodeDefaultID".
+-- see luaScriptsForUnitTests/TestLuaFactoryScript4.lua as an example of
+-- using "id".
+
 -- "actionFunction" must be a lua function that takes a boolean parameter and
 -- returns 0 to 3.
 -- action function return values

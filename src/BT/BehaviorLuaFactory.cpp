@@ -426,6 +426,15 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
 
         // -1 stack: field "type"
         lua_pop(LWrapper->L, 1);
+
+        // +1 stack
+        type = lua_getfield(LWrapper->L, -1, "id");
+        if(type == LUA_TSTRING)
+        {
+            an->setID(std::string(lua_tostring(LWrapper->L, -1)));
+        }
+        lua_pop(LWrapper->L, 1); // -1 stack
+
         // +1 stack: field "actionFunction"
         type = lua_getfield(LWrapper->L, -1, "actionFunction");
         if(type != LUA_TFUNCTION)
@@ -483,6 +492,14 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     else
     {
         return ptr;
+    }
+    lua_pop(LWrapper->L, 1); // -1 stack
+
+    // +1 stack
+    type = lua_getfield(LWrapper->L, -1, "id");
+    if(type == LUA_TSTRING)
+    {
+        ptr->setID(std::string(lua_tostring(LWrapper->L, -1)));
     }
     lua_pop(LWrapper->L, 1); // -1 stack
 
