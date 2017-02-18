@@ -495,7 +495,7 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
             std::cerr << "ERROR: Field \"children\" is not a table!\n";
         }
         lua_pop(LWrapper->L, 1);
-        return ptr;
+        return BT::BehaviorNode::Ptr();
     }
 
     int i = 1;

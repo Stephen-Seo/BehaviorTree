@@ -14,6 +14,10 @@
 --   "actionFunction" that is a function.
 -- See luaScriptsForUnitTests/TestLuaFactoryScript3.lua for info on "custom"
 --   nodes.
+-- Note that if a node is invalid in some way (invalid type or is not an
+-- ActionNode and has no children) then it will be not part of the resulting
+-- behavior tree. Thus if the root node is invalid, the resulting
+-- std::unique_ptr will not hold a node.
 
 -- "actionFunction" must be a lua function that takes a boolean parameter and
 -- returns 0 to 3.
