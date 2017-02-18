@@ -19,7 +19,7 @@
 -- The function "getChildrenSize" is available to get the number of children
 -- the current node has.
 -- The function "activateChild" is available to activate a node.
--- Note that child indices are from 0 to size - 1, not like lua indices.
+-- Note that child indices are from 0 to (size - 1), not like lua indices.
 
 BehaviorTree = {
     type = "custom",
