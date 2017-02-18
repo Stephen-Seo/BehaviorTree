@@ -4,6 +4,7 @@
 #include <memory>
 #include <iostream>
 #include <cstring>
+#include <vector>
 
 #include "PriorityNode.hpp"
 #include "SequenceNode.hpp"
@@ -11,6 +12,8 @@
 #include "LoopNode.hpp"
 #include "ConcurrentNode.hpp"
 #include "ActionNode.hpp"
+#include "CustomLuaNode.hpp"
+#include "CustomLuaNodeState.hpp"
 
 BT::BehaviorLuaFactory::BehaviorLuaFactory(bool isSilentNotVerbose) :
 LWrapper(),
@@ -442,6 +445,40 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
 
         ptr = BehaviorNode::Ptr(an.release());
         return ptr;
+    }
+    else if(std::strcmp(nodeType, "custom") == 0)
+    {
+        LuaStateWrapper::Ptr newLWrapper = std::make_shared<LuaStateWrapper>();
+        std::unique_ptr<CustomLuaNode> clnPtr(new CustomLuaNode(newLWrapper));
+        *((CustomLuaNodeState**)lua_getextraspace(newLWrapper->L)) = clnPtr->getState();
+
+        for(auto iter = functions.begin(); iter != functions.end(); ++iter)
+        {
+            lua_register(newLWrapper->L, iter->first.c_str(), iter->second);
+        }
+
+        lua_register(newLWrapper->L, "getChildrenSize", BT::getChildrenSize);
+        lua_register(newLWrapper->L, "activateChild", BT::activateChild);
+
+        type = lua_getfield(LWrapper->L, -2, "activate");
+        if(type != LUA_TFUNCTION)
+        {
+            if(!isSilent)
+            {
+                std::cerr << "ERROR: custom node field \"activate\" is not a function!\n";
+                lua_pop(LWrapper->L, 2);
+                return ptr;
+            }
+        }
+        std::vector<char> buffer;
+        buffer.reserve(1024);
+        lua_dump(LWrapper->L, BT::writerForTransferringFunction, &buffer, 1);
+        lua_pop(LWrapper->L, 1);
+        luaL_loadbufferx(newLWrapper->L, &buffer[0], buffer.size(),
+            "transferFunction", "b");
+        lua_setglobal(newLWrapper->L, "activate");
+
+        ptr = BehaviorNode::Ptr(clnPtr.release());
     }
     else
     {

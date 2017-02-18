@@ -59,6 +59,9 @@ int setState(lua_State* L)
 
 TEST(BehaviorLuaFactory, Factory)
 {
+    a0 = 0;
+    a1 = 0;
+    a2 = 0;
     BehaviorLuaFactory blf(false);
 
     blf.exposeFunction(printOut, "printOut");
@@ -107,6 +110,31 @@ TEST(BehaviorLuaFactory, Factory)
         EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 
         EXPECT_EQ(1, a.state);
+    }
+}
+
+TEST(BehaviorLuaFactory, FactoryCustom)
+{
+    a0 = 0;
+    a1 = 0;
+    a2 = 0;
+
+    BehaviorLuaFactory blf(false);
+
+    blf.exposeFunction(printOut, "printOut");
+    blf.exposeFunction(activate0, "activate0");
+    blf.exposeFunction(activate1, "activate1");
+    blf.exposeFunction(activate2, "activate2");
+
+    {
+        BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript3.lua");
+        ASSERT_TRUE(tree);
+
+        EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
+
+        EXPECT_EQ(1, a0);
+        EXPECT_EQ(1, a1);
+        EXPECT_EQ(1, a2);
     }
 }
 

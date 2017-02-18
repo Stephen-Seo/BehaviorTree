@@ -13,6 +13,8 @@ set(BehaviorTree_SOURCES
     src/BT/ConcurrentNode.cpp
     src/BT/LuaStateWrapper.cpp
     src/BT/BehaviorLuaFactory.cpp
+    src/BT/CustomLuaNode.cpp
+    src/BT/CustomLuaNodeState.cpp
 )
 
 set(UnitTest_SOURCES
@@ -84,6 +86,11 @@ if(GTEST_FOUND)
             COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript2.lua" "${PROJECT_BINARY_DIR}"
             BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript2.lua"
         )
+        add_custom_command(
+            TARGET UnitTest POST_BUILD
+            COMMAND copy "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript3.lua" "${PROJECT_BINARY_DIR}"
+            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript3.lua"
+        )
     else()
         add_custom_command(
             TARGET UnitTest POST_BUILD
@@ -99,6 +106,11 @@ if(GTEST_FOUND)
             TARGET UnitTest POST_BUILD
             COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript2.lua" "${PROJECT_BINARY_DIR}"
             BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript2.lua"
+        )
+        add_custom_command(
+            TARGET UnitTest POST_BUILD
+            COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/luaScriptsForUnitTests/TestLuaFactoryScript3.lua" "${PROJECT_BINARY_DIR}"
+            BYPRODUCTS "${PROJECT_BINARY_DIR}/TestLuaFactoryScript3.lua"
         )
     endif()
 endif()
