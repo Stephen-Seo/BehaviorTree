@@ -21,6 +21,10 @@
 -- The function "activateChild" is available to activate a node.
 -- Note that child indices are from 0 to (size - 1), not like lua indices.
 
+-- Note that functions "printOut", "activate0", "activate1", and "activate2"
+-- are C functions exposed to the corresponding lua states when calling
+-- the "activate" and "actionFunction" functions from the unit test.
+-- see src/UnitTest/TestLuaFactory.cpp
 BehaviorTree = {
     type = "custom",
     activate = function (isContinuing)
