@@ -23,9 +23,15 @@
 -- returns 0 to 3.
 -- action function return values
 -- 0 - success
--- 1 - isRunning
+-- 1 - running
 -- 2 - fail
 -- 3 - error
+-- The boolean parameter "isContinuing" is true when resuming the node after it
+-- has previously returned 1 (Running).
+-- If a node returns 1 for running, the parent node usually keeps track of
+-- which node returned running, returns running itself, and on the next time
+-- the parent node is activated, it runs the same node again with
+-- isContinuing = true.
 
 -- RandomNodes can have optional fields:
 -- seed: can be an integer that sets the seed of the RandomNode's

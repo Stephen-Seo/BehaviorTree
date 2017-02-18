@@ -33,7 +33,7 @@ BehaviorTree = {
     children = {
         {
             type = "action",
-            actionFunction = function ()
+            actionFunction = function (isContinuing)
                 printOut("ActionFunction 0 activated")
                 activate0()
                 return 0
@@ -41,7 +41,7 @@ BehaviorTree = {
         },
         {
             type = "action",
-            actionFunction = function ()
+            actionFunction = function (isContinuing)
                 printOut("ActionFunction 1 activated")
                 activate1()
                 return 2
@@ -49,7 +49,7 @@ BehaviorTree = {
         },
         {
             type = "action",
-            actionFunction = function ()
+            actionFunction = function (isContinuing)
                 printOut("ActionFunction 2 activated")
                 activate2()
                 return 0
