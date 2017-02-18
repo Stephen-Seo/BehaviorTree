@@ -17,9 +17,9 @@ BehaviorTree = {
     type = "custom",
     activate = function (isContinuing)
         printOut("Got " .. getChildrenSize() .. " children")
+        printOut("0 returned " .. activateChild(0))
         printOut("1 returned " .. activateChild(1))
         printOut("2 returned " .. activateChild(2))
-        printOut("0 returned " .. activateChild(0))
         return 0
     end,
     children = {
