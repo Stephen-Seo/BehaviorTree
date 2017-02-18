@@ -8,6 +8,13 @@
 -- 2 - Failed
 -- 3 - Error
 
+-- The parameter "isContinuing" is true when resuming the node after it has
+-- previously returned 1 (Running).
+-- If a node returns 1 for running, the parent node usually keeps track of
+-- which node returned running, and on the next time the parent node is
+-- activated, it runs the same node again with isContinuing = true.
+-- A custom node doesn't have to obey this behavior, but is recommended.
+
 -- The function "getChildrenSize" is available to get the number of children
 -- the current node has.
 -- The function "activateChild" is available to activate a node.
