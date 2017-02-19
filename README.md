@@ -5,6 +5,8 @@
 
 This project requires a compiler that supports C++11.
 
+Also, lua is a dependency.
+
 ```
 mkdir build
 cd build
