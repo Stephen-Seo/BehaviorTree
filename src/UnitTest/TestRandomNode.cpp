@@ -59,7 +59,7 @@ TEST(BehaviorTree, RandomNode)
             BT::BehaviorNode::Ptr an(
                 std::unique_ptr<BT::ActionNode>(
                     new BT::ActionNode(
-                        [&flags, i] (bool isContinuing)
+                        [&flags, i] (bool /*isContinuing*/)
                             -> BT::BehaviorNode::State::StateType {
                 flags.set(i);
                 return BT::BehaviorNode::State::READY_SUCCESS;
@@ -95,7 +95,7 @@ TEST(BehaviorTree, RandomNode)
             BT::BehaviorNode::Ptr an(
                 std::unique_ptr<BT::ActionNode>(
                     new BT::ActionNode(
-                        [&flags, &hasRun, i] (bool isContinuing)
+                        [&flags, &hasRun, i] (bool /*isContinuing*/)
                             -> BT::BehaviorNode::State::StateType {
                 if(hasRun.test(i))
                 {

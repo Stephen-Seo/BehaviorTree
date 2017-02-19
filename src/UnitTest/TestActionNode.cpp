@@ -9,7 +9,7 @@ TEST(BehaviorTree, ActionNode)
 {
     ActionNode an;
 
-    an.setActionFunction([] (bool isContinuing) {
+    an.setActionFunction([] (bool /*isContinuing*/) {
         static unsigned int count = 0;
 
         if(count < 2)

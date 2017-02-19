@@ -460,10 +460,28 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     }
     else if(std::strcmp(nodeType, "action") == 0)
     {
-        std::unique_ptr<BT::ActionNode> an(new BT::ActionNode(LWrapper));
-
         // -1 stack: field "type"
         lua_pop(LWrapper->L, 1);
+
+        std::unique_ptr<BT::ActionNode> an{};
+        LuaStateWrapper::Ptr newLWrapper{};
+        // +1 stack: field "sharedState"
+        type = lua_getfield(LWrapper->L, -1, "sharedState");
+        if(type == LUA_TBOOLEAN && lua_toboolean(LWrapper->L, -1) == 0)
+        {
+            newLWrapper = LuaStateWrapper::Ptr(new LuaStateWrapper());
+            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(newLWrapper));
+
+            for(auto iter = functions.begin(); iter != functions.end(); ++iter)
+            {
+                lua_register(newLWrapper->L, iter->first.c_str(), iter->second);
+            }
+        }
+        else
+        {
+            an = std::unique_ptr<BT::ActionNode>(new BT::ActionNode(LWrapper));
+        }
+        lua_pop(LWrapper->L, 1); // -1 stack
 
         // +1 stack
         type = lua_getfield(LWrapper->L, -1, "id");
@@ -486,8 +504,21 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
         }
         else // is type LUA_TFUNCTION
         {
-            // -1 stack
-            lua_setglobal(LWrapper->L, an->getLuaActionFunctionName().c_str());
+            if(newLWrapper)
+            {
+                std::vector<char> buffer;
+                buffer.reserve(1024);
+                lua_dump(LWrapper->L, BT::writerForTransferringFunction, &buffer, 1);
+                lua_pop(LWrapper->L, 1); // -1 stack
+                luaL_loadbufferx(newLWrapper->L, &buffer[0], buffer.size(),
+                    "transferFunction", "b");
+                lua_setglobal(newLWrapper->L, an->getLuaActionFunctionName().c_str());
+            }
+            else
+            {
+                // -1 stack
+                lua_setglobal(LWrapper->L, an->getLuaActionFunctionName().c_str());
+            }
         }
 
         ptr = BehaviorNode::Ptr(an.release());

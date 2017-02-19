@@ -22,19 +22,19 @@ int a0 = 0;
 int a1 = 0;
 int a2 = 0;
 
-int activate0(lua_State* L)
+int activate0(lua_State* /*L*/)
 {
     ++a0;
     return 0;
 }
 
-int activate1(lua_State* L)
+int activate1(lua_State* /*L*/)
 {
     ++a1;
     return 0;
 }
 
-int activate2(lua_State* L)
+int activate2(lua_State* /*L*/)
 {
     ++a2;
     return 0;
@@ -182,6 +182,46 @@ TEST(BehaviorLuaFactory, ID)
         EXPECT_EQ(2, a0);
         EXPECT_EQ(2, a1);
         EXPECT_EQ(2, a2);
+    }
+}
+
+TEST(BehaviorLuaFactory, NonSharedState)
+{
+    a0 = 0;
+    a1 = 0;
+    a2 = 0;
+
+    BehaviorLuaFactory blf(false);
+
+    blf.exposeFunction(printOut, "printOut");
+    blf.exposeFunction(activate0, "activate0");
+
+    {
+        BehaviorNode::Ptr tree = blf.createTreeFromFile("TestLuaFactoryScript5.lua");
+        ASSERT_TRUE(tree);
+
+        // overwrite activate0 with activate1
+        blf.exposeFunction(activate1, "activate0");
+
+        // anode0 should actually call activate1 because of shared state
+        // anode1 should still call activate0 because of different state
+
+        BehaviorNode* anode0 = tree->findByID("action0");
+        anode0->activate();
+
+        EXPECT_EQ(a0, 0);
+        EXPECT_EQ(a1, 1);
+
+        BehaviorNode* anode1 = tree->findByID("action1");
+        anode1->activate();
+
+        EXPECT_EQ(a0, 1);
+        EXPECT_EQ(a1, 1);
+
+        tree->activate();
+
+        EXPECT_EQ(a0, 2);
+        EXPECT_EQ(a1, 2);
     }
 }
 

@@ -46,6 +46,13 @@
 -- which node returned running, returns running itself, and on the next time
 -- the parent node is activated, it runs the same node again with
 -- isContinuing = true.
+-- "action" type nodes can have an optional boolean "sharedState".
+-- if "sharedState" is false, then the action node will be created with a
+-- different state than the BehaviorLuaFactory.
+-- if "sharedState" is true or undefined (nil), then the action node will be
+-- created with the same state as the BehaviorLuaFactory.
+-- luaScriptsForUnitTests/TestLuaFactoryScript5.lua and the UnitTest tests this
+-- functionality
 
 -- RandomNodes can have optional fields:
 -- seed: can be an integer that sets the seed of the RandomNode's

@@ -11,11 +11,11 @@ TEST(BehaviorTree, GetCopy)
     std::size_t sCount = 0;
     std::size_t fCount = 0;
 
-    const auto alwaysFail = [&fCount] (bool isContinuing) {
+    const auto alwaysFail = [&fCount] (bool /*isContinuing*/) {
         ++fCount;
         return BehaviorNode::State::FAILED;
     };
-    const auto alwaysSuccess = [&sCount] (bool isContinuing) {
+    const auto alwaysSuccess = [&sCount] (bool /*isContinuing*/) {
         ++sCount;
         return BehaviorNode::State::READY_SUCCESS;
     };

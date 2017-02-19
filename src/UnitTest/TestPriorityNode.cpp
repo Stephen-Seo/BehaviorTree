@@ -17,14 +17,15 @@ TEST(BehaviorTree, PriorityNode)
         fCount = 0;
         runningOnceDidRunOnce = false;
     };
-    const auto alwaysSuccess = [&sCount] (bool isContinuing) {
+    const auto alwaysSuccess = [&sCount] (bool /*isContinuing*/) {
         ++sCount;
         return BehaviorNode::State::READY_SUCCESS;
     };
-    const auto alwaysFail = [&fCount] (bool isContinuing) {
+    const auto alwaysFail = [&fCount] (bool /*isContinuing*/) {
         ++fCount;
         return BehaviorNode::State::FAILED;
     };
+    /*
     const auto runningOnce = [&runningOnceDidRunOnce] (bool isContinuing) {
         if(!runningOnceDidRunOnce)
         {
@@ -36,7 +37,8 @@ TEST(BehaviorTree, PriorityNode)
             return BehaviorNode::State::READY_SUCCESS;
         }
     };
-    const auto runningOnceThenFail = [&runningOnceDidRunOnce] (bool isContinuing) {
+    */
+    const auto runningOnceThenFail = [&runningOnceDidRunOnce] (bool /*isContinuing*/) {
         if(!runningOnceDidRunOnce)
         {
             runningOnceDidRunOnce = true;
