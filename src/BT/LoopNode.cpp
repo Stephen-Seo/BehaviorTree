@@ -43,15 +43,17 @@ void BT::LoopNode::performLoop(std::size_t index)
         if(state.stateType == State::RUNNING)
         {
             state.lastRunningIndex = index;
+            state.stateType = State::RUNNING;
             isRunningOrFail = true;
         }
         else if(state.stateType == State::FAILED)
         {
-            state.stateType = State::READY_SUCCESS;
+            state.stateType = State::FAILED;
             isRunningOrFail = true;
         }
         else if(state.stateType == State::ERROR)
         {
+            state.stateType = State::ERROR;
             isRunningOrFail = true;
         }
         index = (index + 1) % children.size();

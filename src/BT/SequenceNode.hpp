@@ -7,6 +7,12 @@
 namespace BT
 {
 
+/*!
+    \brief Iterates through nodes, stop on running or error
+
+    Returns success if all child nodes return success, otherwise
+    returns fail.
+*/
 class SequenceNode : public LogicNode
 {
 public:

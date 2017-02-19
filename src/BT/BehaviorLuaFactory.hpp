@@ -14,6 +14,58 @@ namespace BT
 
 /*!
     \brief A factory that produces a BehaviorTree from a lua script.
+
+    Example of a lua script generating a BehaviorTree:
+    ~~~{.lua}
+    BehaviorTree = {
+        type = "sequence",
+        id = "root",
+        children = {
+            {
+                type = "action",
+                id = "action0",
+                actionFunction = function (isContinuing)
+                    -- Do stuff
+                    return 0 -- return success
+                end
+            },
+            {
+                type = "action",
+                id = "action1",
+                sharedState = false,
+                actionFunction = function (isContinuing)
+                    -- Do stuff
+                    return 2 -- return fail
+                end
+            },
+            {
+                type = "random",
+                id = "random",
+                randomType = "default",
+                seed = "0", -- not advised to do this, as otherwise default
+                -- is to randomize the seed.
+                children = {
+                    {
+                        type = "action",
+                        id = "action2",
+                        actionFunction = function (isContinuing)
+                            -- Do stuff
+                            return 0 -- return success
+                        end
+                    },
+                    {
+                        type = "action",
+                        id = "action3",
+                        actionFunction = function (isContinuing)
+                            -- Do stuff
+                            return 3 -- return error
+                        end
+                    }
+                }
+            }
+        }
+    }
+    ~~~
 */
 class BehaviorLuaFactory
 {
@@ -44,10 +96,11 @@ public:
     /*!
         \brief Places a function into the lua state with global name "name".
 
-        Note that when the BehaviorTree is generated, all ActionNodes will
-        share the same lua state as this factory on creation, meaning that
-        any function exposed with this function before generating the tree
-        will also be available to the generated ActionNodes.
+        Note that when the BehaviorTree is generated, all ActionNodes (with
+        field "sharedState" nil or true) will share the same lua state as this
+        factory on creation, meaning that any function exposed with this
+        function before generating the tree will also be available to the
+        generated ActionNodes.
 
         An exposed function is saved in a map for when the lua state is
         initialized. Initialization is when the functions will be inserted into
@@ -62,10 +115,11 @@ public:
     /*!
         \brief Places a function into the lua state with global name "name".
 
-        Note that when the BehaviorTree is generated, all ActionNodes will
-        share the same lua state as this factory on creation, meaning that
-        any function exposed with this function before generating the tree
-        will also be available to the generated ActionNodes.
+        Note that when the BehaviorTree is generated, all ActionNodes (with
+        field "sharedState" nil or true) will share the same lua state as this
+        factory on creation, meaning that any function exposed with this
+        function before generating the tree will also be available to the
+        generated ActionNodes.
 
         An exposed function is saved in a map for when the lua state is
         initialized. Initialization is when the functions will be inserted into

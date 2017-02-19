@@ -136,9 +136,26 @@ public:
     */
     virtual Ptr getCopy() = 0;
 
+    /*!
+        \brief Sets the string id of this node, to be found via findByID
+
+        BT::BehaviorLuaFactory automatically sets a node's id if it has the
+        field "id" set with a string.
+    */
     void setID(std::string id);
+
+    /*!
+        \brief Returns the id of this node
+
+        Used internally by findByID.
+    */
     const std::string& getID() const;
 
+    /*!
+        \brief Finds a node in this tree that has the given id
+
+        Returns null if there is no such node with the given id.
+    */
     BehaviorNode* findByID(std::string id);
 
 protected:

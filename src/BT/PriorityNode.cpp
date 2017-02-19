@@ -38,9 +38,11 @@ BT::BehaviorNode::State::StateType BT::PriorityNode::performAction()
             state.lastRunningIndex = i;
             return state.stateType;
         case State::FAILED:
+            break;
         case State::ERROR:
         default:
-            break;
+            state.stateType = State::ERROR;
+            return state.stateType;
         }
     }
 
@@ -64,9 +66,11 @@ BT::BehaviorNode::State::StateType BT::PriorityNode::continueAction()
             state.lastRunningIndex = i;
             return state.stateType;
         case State::FAILED:
+            break;
         case State::ERROR:
         default:
-            break;
+            state.stateType = State::ERROR;
+            return state.stateType;
         }
     }
     state.stateType = State::READY_SUCCESS;

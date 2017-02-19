@@ -7,6 +7,12 @@
 namespace BT
 {
 
+/*!
+    \brief Iterates through child nodes, stopping on success or running or error
+
+    Will return success if no nodes stop execution regardless of nodes that
+    return fail.
+*/
 class PriorityNode : public LogicNode
 {
 public:

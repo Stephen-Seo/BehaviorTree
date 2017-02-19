@@ -7,6 +7,9 @@
 namespace BT
 {
 
+/*!
+    \brief Iterates through child nodes, stop on running or fail or error
+*/
 class ConcurrentNode : public LogicNode
 {
 public:

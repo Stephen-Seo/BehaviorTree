@@ -9,7 +9,9 @@
 namespace BT
 {
 
-/**
+/*!
+    \brief Randomly picks one child node and returns the result of activating it
+
     For default use, declare as type "RandomEngine<>"
 */
 template <typename RandomEngine = std::default_random_engine>

@@ -7,6 +7,9 @@
 namespace BT
 {
 
+/*!
+    \brief Loops through all child nodes until one is running, failed, or error
+*/
 class LoopNode : public LogicNode
 {
 public:
