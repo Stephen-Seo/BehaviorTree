@@ -52,7 +52,7 @@
 -- if "sharedState" is true or undefined (nil), then the action node will be
 -- created with the same state as the BehaviorLuaFactory.
 -- luaScriptsForUnitTests/TestLuaFactoryScript5.lua and the UnitTest tests this
--- functionality
+-- functionality.
 
 -- RandomNodes can have optional fields:
 -- seed: can be an integer that sets the seed of the RandomNode's
