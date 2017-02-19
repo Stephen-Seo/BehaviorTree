@@ -1,4 +1,9 @@
 
+-- In an action node, if field "sharedState" is false,
+-- then it will have a different lua state from the factory.
+-- If the field is nil/undefined or set to true, the action
+-- node will share the same lua state with the factory.
+
 BehaviorTree = {
     type = "sequence",
     id = "root",
