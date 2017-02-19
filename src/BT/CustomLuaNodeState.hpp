@@ -16,7 +16,7 @@ struct CustomLuaNodeState
     CustomLuaNodeState();
 
     CustomLuaNode* cln;
-    std::unique_ptr<void*> uvp;
+    void* vptr;
 };
 
 int getChildrenSize(lua_State* L);

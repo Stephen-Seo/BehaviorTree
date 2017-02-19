@@ -8,7 +8,7 @@
 
 BT::CustomLuaNodeState::CustomLuaNodeState() :
 cln(nullptr),
-uvp(new void*)
+vptr(nullptr)
 {
 }
 

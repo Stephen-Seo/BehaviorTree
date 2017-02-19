@@ -1,4 +1,8 @@
 
+# Version 1.2
+
+Changed the void pointer in CustomLuaNodeState to an actual void pointer.
+
 # Version 1.1
 
 Some nodes wouldn't return error immediately if error was returned by a child
