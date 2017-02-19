@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(BehaviorTree)
 
 set(BehaviorTree_VERSION_MAJOR 1)
-set(BehaviorTree_VERSION_MINOR 0)
+set(BehaviorTree_VERSION_MINOR 1)
 
 set(BehaviorTree_SOURCES
     src/BT/BehaviorNode.cpp
