@@ -30,12 +30,16 @@ namespace BT
 
     One could manually register C functions to the lua state provided an id
     was set for this node (to find it in the tree).
+
+    (A C function registered with lua must take the lua state as a parameter
+    and return the number of results it has (pushed onto the lua state's
+    stack).
+    Note the printStuff function takes one parameter, and receives it from the
+    lua state's stack.)
     ~~~{.cpp}
-    // A C function registered with lua must take the lua state as a parameter
-    // and return the number of results it has (pushed onto the lua state's
-    // stack).
-    // Note this function takes one parameter, and receives it from the lua
-    // state's stack.
+
+    using namespace BT;
+
     int printStuff(lua_State* L)
     {
         const char* str = lua_tostring(L, -1);
@@ -45,18 +49,18 @@ namespace BT
 
     int doOtherStuff(lua_State* L)
     {
-        // do other stuff
         return 0;
     }
 
-    BT::BehaviorLuaFactory factory;
+    BehaviorLuaFactory factory;
     factory.exposeFunction(printStuff, "printStuff");
-    BT::BehaviorNode::Ptr tree = factory.createTreeFromFile("script.lua");
+    BehaviorNode::Ptr tree = factory.createTreeFromFile("script.lua");
 
-    BT::BehaviorNode* anode = tree->findByID("actionNode0");
+    BehaviorNode* anode = tree->findByID("actionNode0");
     lua_register(anode->getLuaState(), "doOtherStuff", doOtherStuff);
 
     tree->activate();
+
     ~~~
 
     Note that it often isn't enough to expose a function to the lua state
