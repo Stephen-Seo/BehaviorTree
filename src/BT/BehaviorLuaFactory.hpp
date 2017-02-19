@@ -95,6 +95,16 @@ public:
         factory) and a std::unique_ptr<BehaviorNode> holding nothing will be
         returned.
     */
+    BehaviorNode::Ptr createTreeFromScript(const char* luaScript, std::size_t size);
+
+    /*!
+        \brief Creates a BehaviorTree from a lua script from a string.
+
+        If an error occurs during tree generation, errors will be output
+        on standard error (if isSilentNotVerbose is false when creating this
+        factory) and a std::unique_ptr<BehaviorNode> holding nothing will be
+        returned.
+    */
     BehaviorNode::Ptr createTreeFromScript(std::string luaScript);
 
     /*!

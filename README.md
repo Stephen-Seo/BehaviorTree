@@ -12,6 +12,9 @@ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./install -DBUILD_SHARED
 make
 make install
 ```
+
+Note that UnitTest will only build if the library gtest is available.
+
 ## Documentation
 
 See the header files in src/BT for documentation (start with BT::BehaviorNode).

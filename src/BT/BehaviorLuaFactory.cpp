@@ -97,6 +97,44 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string lua
     return createTree();
 }
 
+BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(const char* luaScript, std::size_t size)
+{
+    if(!LWrapper)
+    {
+        initializeLuaState();
+    }
+
+    int type = luaL_loadbuffer(
+        LWrapper->L,
+        luaScript,
+        size,
+        "BT::BehaviorLuaFactory::createTreeFromScript"
+    );
+    if(type != LUA_OK)
+    {
+        if(!isSilent)
+        {
+            std::cerr << "ERROR: Failed to load lua script!\n";
+            if(type == LUA_ERRSYNTAX)
+            {
+                std::cerr << "HINT: Appears to be syntax error\n";
+            }
+        }
+        return BT::BehaviorNode::Ptr();
+    }
+    else if(lua_pcall(LWrapper->L, 0, 0, 0) != LUA_OK)
+    {
+        if(!isSilent)
+        {
+            std::cerr << "ERROR: Failed to execute lua script!\n";
+        }
+        lua_pop(LWrapper->L, 1);
+        return BT::BehaviorNode::Ptr();
+    }
+
+    return createTree();
+}
+
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromScript(std::string luaScript)
 {
     if(!LWrapper)
