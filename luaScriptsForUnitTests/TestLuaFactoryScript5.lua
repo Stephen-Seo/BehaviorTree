@@ -26,6 +26,14 @@ BehaviorTree = {
                 activate0()
                 return 0
             end
+        },
+        {
+            type = "action",
+            id = "action2",
+            sharedState = false,
+            actionFunction = function (isContinuing)
+                mightBeUndefined("Calling might be undefined")
+            end
         }
     }
 }

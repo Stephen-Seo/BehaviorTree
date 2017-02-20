@@ -6,6 +6,7 @@
 #include <lua.hpp>
 
 #include <BT/BehaviorLuaFactory.hpp>
+#include <BT/ActionNode.hpp>
 
 using namespace BT;
 
@@ -217,6 +218,12 @@ TEST(BehaviorLuaFactory, NonSharedState)
 
         EXPECT_EQ(a0, 1);
         EXPECT_EQ(a1, 1);
+
+        lua_register(
+            ((ActionNode*)tree->findByID("action2"))->getLuaState(),
+            "mightBeUndefined",
+            printOut
+        );
 
         tree->activate();
 
