@@ -1,4 +1,9 @@
 
+# Version 1.3
+
+Added a function to BT::BehaviorLuaFactory "getLuaStateWrapper" that returns
+the std::shared_ptr managing the Factory's lua state.
+
 # Version 1.2
 
 Changed the void pointer in CustomLuaNodeState to an actual void pointer.

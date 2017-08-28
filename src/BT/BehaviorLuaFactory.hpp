@@ -174,6 +174,25 @@ public:
     lua_State* getLuaState();
 
     /*!
+        \brief Gets the current lua state wrapper held by this factory.
+
+        Internally, the lua state isn't initialized until a tree is
+        generated or this function is called. Only the function
+        BehaviorLuaFactory::resetLuaState will force this factory to use a
+        different new lua state. Use BehaviorLuaFactory::resetLuaState and
+        BehaviorLuaFactory::clearLuaCFunctions when generating multiple trees
+        that should have different lua states (and exposed functions).
+
+        Use this function instead of getLuaState() if you want the lua state
+        to persist past the life of this factory and generated lua nodes by
+        keeping the returned shared pointer.
+
+        If all shared pointers (lua state wrappers) with the same lua state are
+        destructed, the lua state will be cleaned up via "lua_close"
+    */
+    LuaStateWrapper::Ptr getLuaStateWrapper();
+
+    /*!
         \brief Resets the internal lua state to a new different state.
 
         Internally, the lua state doesn't actually get reinitialized until

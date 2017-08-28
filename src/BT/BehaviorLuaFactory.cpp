@@ -183,6 +183,16 @@ lua_State* BT::BehaviorLuaFactory::getLuaState()
     return LWrapper->L;
 }
 
+BT::LuaStateWrapper::Ptr BT::BehaviorLuaFactory::getLuaStateWrapper()
+{
+    if(!LWrapper)
+    {
+        initializeLuaState();
+    }
+
+    return LWrapper;
+}
+
 void BT::BehaviorLuaFactory::resetLuaState()
 {
     LWrapper.reset();
