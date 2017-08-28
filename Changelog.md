@@ -1,8 +1,14 @@
+# Version 1.4
+
+Custom Lua Nodes now use the lua registry to store their required state instead
+of using "lua\_getextraspace"
+
+The UnitTest no longer uses "lua\_getextraspace" but also uses the lua registry.
 
 # Version 1.3
 
 Added a function to BT::BehaviorLuaFactory "getLuaStateWrapper" that returns
-the std::shared_ptr managing the Factory's lua state.
+the std::shared\_ptr managing the Factory's lua state.
 
 # Version 1.2
 

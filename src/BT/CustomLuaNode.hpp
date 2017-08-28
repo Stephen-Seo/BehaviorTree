@@ -47,9 +47,10 @@ public:
     /*!
         \brief Returns this node's CustomLuaNodeState as a pointer
 
-        This node's lua state's "extraspace" (lua_getextraspace) is set to
-        this node's CustomLuaNodeState. Thus CustomLuaNodeState's void pointer
-        can be set to whatever is necessary.
+        This node's lua state's registry table has an entry that is the ptr
+        to this CustomLuaNodeState stored as a lua_Integer in the table.
+        The index is BT_CUSTOM_LUA_NODE_STATE_REGISTRY_INDEX, which is defined
+        in CustomLuaNodeState.hpp .
     */
     CustomLuaNodeState* getState();
 

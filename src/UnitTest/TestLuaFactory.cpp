@@ -8,6 +8,8 @@
 #include <BT/BehaviorLuaFactory.hpp>
 #include <BT/ActionNode.hpp>
 
+#define UNIT_TEST_STATE_REGISTRY_INDEX "BT_UnitTest_StatePtr"
+
 using namespace BT;
 
 int printOut(lua_State* L)
@@ -52,7 +54,11 @@ struct A
 
 int setState(lua_State* L)
 {
-    A* a = *((A**)lua_getextraspace(L));
+    lua_pushstring(L, UNIT_TEST_STATE_REGISTRY_INDEX);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    A* a = (A*)lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
     a->state = lua_tointeger(L, -1);
 
     return 0;
@@ -99,7 +105,9 @@ TEST(BehaviorLuaFactory, Factory)
 
     {
         A a{};
-        *((A**)lua_getextraspace(blf.getLuaState())) = &a;
+        lua_pushstring(blf.getLuaState(), UNIT_TEST_STATE_REGISTRY_INDEX);
+        lua_pushinteger(blf.getLuaState(), (lua_Integer)&a);
+        lua_settable(blf.getLuaState(), LUA_REGISTRYINDEX);
 
         EXPECT_EQ(0, a.state);
 

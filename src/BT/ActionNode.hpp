@@ -64,10 +64,10 @@ namespace BT
     ~~~
 
     Note that it often isn't enough to expose a function to the lua state
-    because no state is saved. Consider using "lua_getextraspace" to
-    assign a struct/class to a void pointer that is available to any
-    function using the same lua state. The src/UnitTest/TestLuaFactory.cpp
-    provides an example of doing so.
+    because no state is saved. Consider using lua's registry to assign any ptr
+    to a lua_Integer in the registry table that is available to any function
+    using the same lua state.
+    The src/UnitTest/TestLuaFactory.cpp provides an example of doing so.
 */
 class ActionNode : public BehaviorNode
 {

@@ -7,14 +7,16 @@
 #include "CustomLuaNode.hpp"
 
 BT::CustomLuaNodeState::CustomLuaNodeState() :
-cln(nullptr),
-vptr(nullptr)
+cln(nullptr)
 {
 }
 
 int BT::getChildrenSize(lua_State* L)
 {
-    CustomLuaNodeState* state = *((CustomLuaNodeState**)lua_getextraspace(L));
+    lua_pushstring(L, BT_CUSTOM_LUA_NODE_STATE_REGISTRY_INDEX);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    CustomLuaNodeState* state = (CustomLuaNodeState*)lua_tointeger(L, -1);
+    lua_pop(L, 1);
 
     if(state && state->cln)
     {
@@ -30,7 +32,10 @@ int BT::getChildrenSize(lua_State* L)
 
 int BT::activateChild(lua_State* L)
 {
-    CustomLuaNodeState* state = *((CustomLuaNodeState**)lua_getextraspace(L));
+    lua_pushstring(L, BT_CUSTOM_LUA_NODE_STATE_REGISTRY_INDEX);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    CustomLuaNodeState* state = (CustomLuaNodeState*)lua_tointeger(L, -1);
+    lua_pop(L, 1);
 
     if(lua_gettop(L) == 1)
     {
