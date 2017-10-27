@@ -132,6 +132,50 @@ public:
     void exposeFunction(int (*function)(lua_State*), std::string name);
 
     /*!
+        \brief Registers a module (luaopen_*) with global name "moduleName"
+
+        Note that when registering a lua standard library like "base", the
+        library's functions will be in a table of name "moduleName".
+
+        For example, if exposeLuaLibrary was called with the "math" library:
+
+            exposeLuaLibrary(luaopen_math, "math");
+
+        Then the registered functions will be available with calls like
+
+            math.random(5)
+
+        where the table name is the "moduleName" passed to the function.
+
+        Note that registering base with "moduleName" as "base" will place
+        base functions in the "base" table.
+    */
+    void exposeLuaLibrary(
+        int (*luaopen_)(lua_State*), const char* moduleName);
+
+    /*!
+        \brief Registers a module (luaopen_*) with global name "moduleName"
+
+        Note that when registering a lua standard library like "base", the
+        library's functions will be in a table of name "moduleName".
+
+        For example, if exposeLuaLibrary was called with the "math" library:
+
+            exposeLuaLibrary(luaopen_math, "math");
+
+        Then the registered functions will be available with calls like
+
+            math.random(5)
+
+        where the table name is the "moduleName" passed to the function.
+
+        Note that registering base with "moduleName" as "base" will place
+        base functions in the "base" table.
+    */
+    void exposeLuaLibrary(
+        int (*luaopen_)(lua_State*), std::string moduleName);
+
+    /*!
         \brief Creates a BehaviorTree from a lua script from a file.
 
         If an error occurs during tree generation, errors will be output
@@ -218,6 +262,7 @@ private:
     LuaStateWrapper::Ptr LWrapper;
     bool isSilent;
     std::unordered_map<std::string, int(*)(lua_State*)> functions;
+    std::unordered_map<std::string, int(*)(lua_State*)> libs;
 
     void initializeLuaState();
     BehaviorNode::Ptr createTree();

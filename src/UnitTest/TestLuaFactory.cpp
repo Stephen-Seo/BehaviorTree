@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 
 #include <iostream>
+#include <cstring>
 
 #include <lua.hpp>
 
@@ -238,5 +239,32 @@ TEST(BehaviorLuaFactory, NonSharedState)
         EXPECT_EQ(a0, 2);
         EXPECT_EQ(a1, 2);
     }
+}
+
+TEST(BehaviorLuaFactory, ExposeLib)
+{
+    BehaviorLuaFactory blf(false);
+
+    blf.exposeFunction(printOut, "printOut");
+    blf.exposeLuaLibrary(luaopen_math, "math");
+
+    const char* luaScript = ""
+        "    BehaviorTree = {\n"
+        "        type = \"action\",\n"
+        "        actionFunction = function (c)\n"
+        "            r = 5.5\n"
+        "            r = math.floor(r)\n"
+        "            printOut(r)\n"
+        "            if r == 5 then\n"
+        "                return 0\n"
+        "            else\n"
+        "                return 2\n"
+        "            end\n"
+        "        end\n"
+        "}\n"
+        "";
+
+    auto tree = blf.createTreeFromScript(luaScript, strlen(luaScript));
+    EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 }
 

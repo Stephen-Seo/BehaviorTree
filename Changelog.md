@@ -1,3 +1,8 @@
+# Version 1.5
+
+Added "exposeLuaLibrary" functions to BehaviorLuaFactory that can be called to
+load modules (such as the lua standard library modules).
+
 # Version 1.4
 
 Custom Lua Nodes now use the lua registry to store their required state instead

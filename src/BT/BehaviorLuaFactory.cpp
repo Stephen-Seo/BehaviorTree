@@ -64,6 +64,30 @@ void BT::BehaviorLuaFactory::exposeFunction(int (*function)(lua_State*), std::st
     }
 }
 
+void BT::BehaviorLuaFactory::exposeLuaLibrary(int (*luaopen_)(lua_State *),
+    const char* moduleName)
+{
+    libs.insert(std::make_pair(std::string(moduleName), luaopen_));
+
+    if(LWrapper)
+    {
+        luaL_requiref(LWrapper->L, moduleName, luaopen_, 1); // +1
+        lua_pop(LWrapper->L, 1); // -1
+    }
+}
+
+void BT::BehaviorLuaFactory::exposeLuaLibrary(int (*luaopen_)(lua_State *),
+    std::string moduleName)
+{
+    libs.insert(std::make_pair(moduleName, luaopen_));
+
+    if(LWrapper)
+    {
+        luaL_requiref(LWrapper->L, moduleName.c_str(), luaopen_, 1); // +1
+        lua_pop(LWrapper->L, 1); // -1
+    }
+}
+
 BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeFromFile(std::string luaFilename)
 {
     if(!LWrapper)
@@ -211,6 +235,12 @@ void BT::BehaviorLuaFactory::initializeLuaState()
     {
         lua_pushcfunction(LWrapper->L, iter->second);
         lua_setglobal(LWrapper->L, iter->first.c_str());
+    }
+    for(const auto& pair : libs)
+    {
+        luaL_requiref(LWrapper->L, pair.first.c_str(),
+            pair.second, 1); // +1
+        lua_pop(LWrapper->L, 1); // -1
     }
 }
 
@@ -486,6 +516,12 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
             {
                 lua_register(newLWrapper->L, iter->first.c_str(), iter->second);
             }
+            for(const auto& pair : libs)
+            {
+                luaL_requiref(newLWrapper->L, pair.first.c_str(),
+                    pair.second, 1); // +1
+                lua_pop(newLWrapper->L, 1); // -1
+            }
         }
         else
         {
@@ -545,6 +581,12 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
         for(auto iter = functions.begin(); iter != functions.end(); ++iter)
         {
             lua_register(newLWrapper->L, iter->first.c_str(), iter->second);
+        }
+        for(const auto& pair : libs)
+        {
+            luaL_requiref(newLWrapper->L, pair.first.c_str(),
+                pair.second, 1); // +1
+            lua_pop(newLWrapper->L, 1); // -1
         }
 
         lua_register(newLWrapper->L, "getChildrenSize", BT::getChildrenSize);
