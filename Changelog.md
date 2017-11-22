@@ -1,3 +1,10 @@
+# Version 1.6
+
+Added "getLuaStatesInTree" to BehaviorNode.
+
+Generating a behavior tree from lua script no longer allows ActionNodes to have
+children.
+
 # Version 1.5
 
 Added "exposeLuaLibrary" functions to BehaviorLuaFactory that can be called to

@@ -626,27 +626,31 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
     }
     lua_pop(LWrapper->L, 1); // -1 stack
 
-    // +1 stack: field "children"
-    type = lua_getfield(LWrapper->L, -1, "children");
-    if(type != LUA_TTABLE)
+    if(std::strcmp(nodeType, "action") != 0)
     {
-        if(!isSilent)
+        // +1 stack: field "children"
+        type = lua_getfield(LWrapper->L, -1, "children");
+        if(type != LUA_TTABLE)
         {
-            std::cerr << "ERROR: Field \"children\" is not a table!\n";
+            if(!isSilent)
+            {
+                std::cerr << "ERROR: Field \"children\" is not a table!\n";
+            }
+            lua_pop(LWrapper->L, 1);
+            return BT::BehaviorNode::Ptr();
         }
-        lua_pop(LWrapper->L, 1);
-        return BT::BehaviorNode::Ptr();
-    }
 
-    int i = 1;
-    while(lua_geti(LWrapper->L, -1, i++) == LUA_TTABLE)
-    {
-        // +1 stack: per iter of loop
+        int i = 1;
+        while(lua_geti(LWrapper->L, -1, i++) == LUA_TTABLE)
+        {
+            // +1 stack: per iter of loop (also when loop ends)
 
-        ptr->insert(createTreeHelper());
-        lua_pop(LWrapper->L, 1); // -1 stack
+            ptr->insert(createTreeHelper());
+            lua_pop(LWrapper->L, 1); // -1 stack
+        }
+        lua_pop(LWrapper->L, 1); // -1 stack from loop
+        lua_pop(LWrapper->L, 1); // -1 stack: field "children"
     }
-    lua_pop(LWrapper->L, 1); // -1 stack: field "children"
 
     return ptr;
 }

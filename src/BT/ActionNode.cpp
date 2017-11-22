@@ -122,6 +122,14 @@ BT::BehaviorNode::State::StateType BT::ActionNode::continueAction()
     }
 }
 
+void BT::ActionNode::getLuaStatesHelper(std::vector<lua_State*>& v)
+{
+    if(LWrapper)
+    {
+        v.push_back(LWrapper->L);
+    }
+}
+
 BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isContinuing)
 {
     if(!LWrapper)

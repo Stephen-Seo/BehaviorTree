@@ -51,6 +51,15 @@ BT::BehaviorNode::State::StateType BT::CustomLuaNode::continueAction()
     return action(true);
 }
 
+void BT::CustomLuaNode::getLuaStatesHelper(std::vector<lua_State*>& v)
+{
+    if(LWrapper)
+    {
+        v.push_back(LWrapper->L);
+    }
+    BT::BehaviorNode::getLuaStatesHelper(v);
+}
+
 BT::BehaviorNode::State::StateType BT::CustomLuaNode::action(bool isContinuing)
 {
     // +1 stack: activate function

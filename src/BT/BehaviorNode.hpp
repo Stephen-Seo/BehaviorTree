@@ -10,6 +10,8 @@
 #include <memory>
 #include <string>
 
+class lua_State;
+
 namespace BT
 {
 
@@ -158,12 +160,26 @@ public:
     */
     BehaviorNode* findByID(std::string id);
 
+    /*!
+        \brief Returns a vector of all the lua_State instances in the tree.
+
+        Note that if there are 3 action nodes and 2 custom lua nodes in the
+        tree, then 5 states will be returned in the vector regardless if some
+        of the states are the same.
+
+        Also note if the tree was not generated via a lua script, then this
+        function will only return an empty vector.
+    */
+    std::vector<lua_State*> getLuaStatesInTree();
+
 protected:
     std::vector<Ptr> children;
     State state;
 
     virtual State::StateType performAction() = 0;
     virtual State::StateType continueAction() = 0;
+
+    virtual void getLuaStatesHelper(std::vector<lua_State*>& v);
 
 private:
     std::string id;

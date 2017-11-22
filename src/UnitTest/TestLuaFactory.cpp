@@ -268,3 +268,63 @@ TEST(BehaviorLuaFactory, ExposeLib)
     EXPECT_EQ(tree->activate(), BehaviorNode::State::READY_SUCCESS);
 }
 
+TEST(BehaviorLuaFactory, getLuaStatesInTree)
+{
+    BehaviorLuaFactory blf(false);
+
+    blf.exposeFunction(activate0, "activateF");
+
+    const char* luaScript = ""
+        "   BehaviorTree = {\n"
+        "       type = \"concurrent\",\n"
+        "       children = {\n"
+        "           {\n"
+        "               type = \"action\",\n"
+        "               actionFunction = function (isContinuing)\n"
+        "                   activateF()\n"
+        "                   return 0\n"
+        "               end\n"
+        "           },\n"
+        "           {\n"
+        "               type = \"custom\",\n"
+        "               activate = function (isContinuing)\n"
+        "                   activateF()\n"
+        "                   activateChild(0)\n"
+        "                   return 0\n"
+        "               end,\n"
+        "               children = {\n"
+        "                   {\n"
+        "                       type = \"action\",\n"
+        "                       actionFunction = function (isContinuing)\n"
+        "                           activateF()\n"
+        "                           return 0\n"
+        "                       end\n"
+        "                   }\n"
+        "               }\n"
+        "           }\n"
+        "       }\n"
+        "   }\n"
+        "";
+
+    auto tree = blf.createTreeFromScript(luaScript, strlen(luaScript));
+    EXPECT_EQ(tree->getLuaStatesInTree().size(), 3);
+
+    a0 = 0;
+    a1 = 0;
+
+    tree->activate();
+
+    EXPECT_EQ(a0, 3);
+    EXPECT_EQ(a1, 0);
+
+    for(auto* state : tree->getLuaStatesInTree())
+    {
+        lua_register(state, "activateF", activate1);
+    }
+
+    tree->activate();
+
+    EXPECT_EQ(a0, 3);
+    EXPECT_EQ(a1, 3);
+}
+
