@@ -307,7 +307,7 @@ TEST(BehaviorLuaFactory, getLuaStatesInTree)
         "";
 
     auto tree = blf.createTreeFromScript(luaScript, strlen(luaScript));
-    EXPECT_EQ(tree->getLuaStatesInTree().size(), 3);
+    EXPECT_EQ(tree->getLuaStatesInTree().size(), 2);
 
     a0 = 0;
     a1 = 0;

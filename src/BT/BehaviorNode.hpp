@@ -9,6 +9,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <unordered_set>
 
 class lua_State;
 
@@ -170,7 +171,7 @@ public:
         Also note if the tree was not generated via a lua script, then this
         function will only return an empty vector.
     */
-    std::vector<lua_State*> getLuaStatesInTree();
+    std::unordered_set<lua_State*> getLuaStatesInTree();
 
 protected:
     std::vector<Ptr> children;
@@ -179,7 +180,7 @@ protected:
     virtual State::StateType performAction() = 0;
     virtual State::StateType continueAction() = 0;
 
-    virtual void getLuaStatesHelper(std::vector<lua_State*>& v);
+    virtual void getLuaStatesHelper(std::unordered_set<lua_State*>& s);
 
 private:
     std::string id;

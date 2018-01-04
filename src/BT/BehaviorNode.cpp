@@ -112,20 +112,20 @@ BT::BehaviorNode* BT::BehaviorNode::findByID(std::string id)
     }
 }
 
-std::vector<lua_State*> BT::BehaviorNode::getLuaStatesInTree()
+std::unordered_set<lua_State*> BT::BehaviorNode::getLuaStatesInTree()
 {
-    std::vector<lua_State*> states;
+    std::unordered_set<lua_State*> states;
 
     getLuaStatesHelper(states);
 
     return states;
 }
 
-void BT::BehaviorNode::getLuaStatesHelper(std::vector<lua_State*>& v)
+void BT::BehaviorNode::getLuaStatesHelper(std::unordered_set<lua_State*>& s)
 {
     for(auto& child : children)
     {
-        child->getLuaStatesHelper(v);
+        child->getLuaStatesHelper(s);
     }
 }
 

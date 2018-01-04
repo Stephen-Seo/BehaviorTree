@@ -1,3 +1,11 @@
+# Version 1.7
+
+Changed "getLuaStatesInTree" to return an unordered\_set of lua states
+(pointers) instead of a vector to avoid duplicates in the returned data
+structure.
+
+Minor change to .gitignore.
+
 # Version 1.6
 
 Added "getLuaStatesInTree" to BehaviorNode.

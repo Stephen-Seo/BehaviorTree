@@ -122,11 +122,11 @@ BT::BehaviorNode::State::StateType BT::ActionNode::continueAction()
     }
 }
 
-void BT::ActionNode::getLuaStatesHelper(std::vector<lua_State*>& v)
+void BT::ActionNode::getLuaStatesHelper(std::unordered_set<lua_State*>& s)
 {
     if(LWrapper)
     {
-        v.push_back(LWrapper->L);
+        s.insert(LWrapper->L);
     }
 }
 

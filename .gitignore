@@ -2,3 +2,4 @@ build*/
 *.o
 *.swp
 doxygen_html/
+compile_commands.json

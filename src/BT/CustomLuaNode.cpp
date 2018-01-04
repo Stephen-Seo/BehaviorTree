@@ -51,13 +51,13 @@ BT::BehaviorNode::State::StateType BT::CustomLuaNode::continueAction()
     return action(true);
 }
 
-void BT::CustomLuaNode::getLuaStatesHelper(std::vector<lua_State*>& v)
+void BT::CustomLuaNode::getLuaStatesHelper(std::unordered_set<lua_State*>& s)
 {
     if(LWrapper)
     {
-        v.push_back(LWrapper->L);
+        s.insert(LWrapper->L);
     }
-    BT::BehaviorNode::getLuaStatesHelper(v);
+    BT::BehaviorNode::getLuaStatesHelper(s);
 }
 
 BT::BehaviorNode::State::StateType BT::CustomLuaNode::action(bool isContinuing)

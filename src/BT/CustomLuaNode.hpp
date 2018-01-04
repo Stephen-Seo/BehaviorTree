@@ -65,7 +65,7 @@ protected:
     virtual State::StateType performAction() override;
     virtual State::StateType continueAction() override;
 
-    virtual void getLuaStatesHelper(std::vector<lua_State*>& v) override;
+    virtual void getLuaStatesHelper(std::unordered_set<lua_State*>& s) override;
 
 private:
     State::StateType action(bool isContinuing);
