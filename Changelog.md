@@ -1,3 +1,7 @@
+# Version 1.8
+
+Fix forward declare of lua\_State in src/BT/BehaviorNode.hpp.
+
 # Version 1.7
 
 Changed "getLuaStatesInTree" to return an unordered\_set of lua states

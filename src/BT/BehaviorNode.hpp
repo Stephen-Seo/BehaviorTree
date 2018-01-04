@@ -11,7 +11,7 @@
 #include <string>
 #include <unordered_set>
 
-class lua_State;
+struct lua_State;
 
 namespace BT
 {
