@@ -10,9 +10,9 @@ Also, lua is a dependency.
 ```
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./install -DBUILD_SHARED_LIBS=True ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=True ..
 make
-make install
+make DESTDIR=install_out install
 ```
 
 Note that UnitTest will only build if the library gtest is available.
