@@ -50,7 +50,7 @@ target_include_directories(BehaviorTree
 )
 
 target_link_libraries(BehaviorTree
-    PUBLIC lua
+    PUBLIC ${LUA_LIBRARY}
 )
 endif()
 
@@ -68,6 +68,7 @@ if(GTEST_FOUND)
     target_link_libraries(UnitTest
         PUBLIC ${GTEST_BOTH_LIBRARIES}
         PUBLIC BehaviorTree
+        PUBLIC pthread
     )
 
     if(WIN32)
