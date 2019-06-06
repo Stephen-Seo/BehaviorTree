@@ -1,3 +1,8 @@
+# Version 1.9
+
+Minor internal fix for proper handling of internal pointers (see commit
+d2144cf464da8e00aa2369b1ad18a8137e6949b5 for more details).
+
 # Version 1.8
 
 Fix forward declare of lua\_State in src/BT/BehaviorNode.hpp.
