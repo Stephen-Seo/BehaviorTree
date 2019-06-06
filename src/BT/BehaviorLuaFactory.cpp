@@ -598,9 +598,9 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
             if(!isSilent)
             {
                 std::cerr << "ERROR: custom node field \"activate\" is not a function!\n";
-                lua_pop(LWrapper->L, 2);
-                return ptr;
             }
+            lua_pop(LWrapper->L, 2);
+            return ptr;
         }
         std::vector<char> buffer;
         buffer.reserve(1024);
