@@ -15,7 +15,7 @@ int BT::getChildrenSize(lua_State* L)
 {
     lua_pushstring(L, BT_CUSTOM_LUA_NODE_STATE_REGISTRY_INDEX);
     lua_gettable(L, LUA_REGISTRYINDEX);
-    CustomLuaNodeState* state = (CustomLuaNodeState*)lua_tointeger(L, -1);
+    CustomLuaNodeState* state = (CustomLuaNodeState*)lua_touserdata(L, -1);
     lua_pop(L, 1);
 
     if(state && state->cln)
@@ -34,7 +34,7 @@ int BT::activateChild(lua_State* L)
 {
     lua_pushstring(L, BT_CUSTOM_LUA_NODE_STATE_REGISTRY_INDEX);
     lua_gettable(L, LUA_REGISTRYINDEX);
-    CustomLuaNodeState* state = (CustomLuaNodeState*)lua_tointeger(L, -1);
+    CustomLuaNodeState* state = (CustomLuaNodeState*)lua_touserdata(L, -1);
     lua_pop(L, 1);
 
     if(lua_gettop(L) == 1)

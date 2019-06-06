@@ -575,7 +575,7 @@ BT::BehaviorNode::Ptr BT::BehaviorLuaFactory::createTreeHelper()
         LuaStateWrapper::Ptr newLWrapper = std::make_shared<LuaStateWrapper>();
         std::unique_ptr<CustomLuaNode> clnPtr(new CustomLuaNode(newLWrapper));
         lua_pushstring(newLWrapper->L, BT_CUSTOM_LUA_NODE_STATE_REGISTRY_INDEX);
-        lua_pushinteger(newLWrapper->L, (lua_Integer)clnPtr->getState());
+        lua_pushlightuserdata(newLWrapper->L, clnPtr->getState());
         lua_settable(newLWrapper->L, LUA_REGISTRYINDEX);
 
         for(auto iter = functions.begin(); iter != functions.end(); ++iter)
