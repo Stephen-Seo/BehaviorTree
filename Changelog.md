@@ -1,7 +1,14 @@
+# Version 1.10
+
+Previous implementation did not properly handle an error while generating a
+BehaviorTree from a lua script in one specific case. This has been fixed in this
+version.
+
 # Version 1.9
 
-Minor internal fix for proper handling of internal pointers (see commit
-d2144cf464da8e00aa2369b1ad18a8137e6949b5 for more details).
+Previous implementation placed a pointer into the lua state as an integer. This
+new version now places it as "lightuserdata" which is more appropriate for a
+pointer. Note this is an internal change of how the library works.
 
 # Version 1.8
 
