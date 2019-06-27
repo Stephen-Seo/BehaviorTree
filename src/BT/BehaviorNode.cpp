@@ -4,7 +4,7 @@
 #include <utility>
 
 BT::BehaviorNode::State::State() :
-stateType(READY_SUCCESS),
+stateType(StateType::BT_READY_SUCCESS),
 lastRunningIndex(0)
 {}
 
@@ -69,9 +69,9 @@ void BT::BehaviorNode::resetState()
     state = State();
 }
 
-BT::BehaviorNode::State::StateType BT::BehaviorNode::activate()
+BT::BehaviorNode::StateType BT::BehaviorNode::activate()
 {
-    if(state.stateType == State::RUNNING)
+    if(state.stateType == StateType::BT_RUNNING)
     {
         return continueAction();
     }

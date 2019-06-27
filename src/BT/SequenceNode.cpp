@@ -20,7 +20,7 @@ BT::BehaviorNode::Ptr BT::SequenceNode::getCopy()
     return Ptr(copy.release());
 }
 
-BT::BehaviorNode::State::StateType BT::SequenceNode::performAction()
+BT::BehaviorNode::StateType BT::SequenceNode::performAction()
 {
     bool failed = false;
     for(std::size_t i = 0; i < children.size(); ++i)
@@ -28,33 +28,33 @@ BT::BehaviorNode::State::StateType BT::SequenceNode::performAction()
         state.stateType = children[i]->activate();
         switch(state.stateType)
         {
-        case State::READY_SUCCESS:
+        case StateType::BT_READY_SUCCESS:
             break;
-        case State::RUNNING:
+        case StateType::BT_RUNNING:
             state.lastRunningIndex = i;
             return state.stateType;
-        case State::FAILED:
+        case StateType::BT_FAILED:
             failed = true;
             break;
-        case State::ERROR:
+        case StateType::BT_ERROR:
         default:
-            state.stateType = State::ERROR;
+            state.stateType = StateType::BT_ERROR;
             return state.stateType;
         }
     }
 
     if(failed)
     {
-        state.stateType = State::FAILED;
+        state.stateType = StateType::BT_FAILED;
     }
     else
     {
-        state.stateType = State::READY_SUCCESS;
+        state.stateType = StateType::BT_READY_SUCCESS;
     }
     return state.stateType;
 }
 
-BT::BehaviorNode::State::StateType BT::SequenceNode::continueAction()
+BT::BehaviorNode::StateType BT::SequenceNode::continueAction()
 {
     bool failed = false;
     for(std::size_t i = state.lastRunningIndex; i < children.size(); ++i)
@@ -62,28 +62,28 @@ BT::BehaviorNode::State::StateType BT::SequenceNode::continueAction()
         state.stateType = children[i]->activate();
         switch(state.stateType)
         {
-        case State::READY_SUCCESS:
+        case StateType::BT_READY_SUCCESS:
             break;
-        case State::RUNNING:
+        case StateType::BT_RUNNING:
             state.lastRunningIndex = i;
             return state.stateType;
-        case State::FAILED:
+        case StateType::BT_FAILED:
             failed = true;
             break;
-        case State::ERROR:
+        case StateType::BT_ERROR:
         default:
-            state.stateType = State::ERROR;
+            state.stateType = StateType::BT_ERROR;
             return state.stateType;
         }
     }
 
     if(failed)
     {
-        state.stateType = State::FAILED;
+        state.stateType = StateType::BT_FAILED;
     }
     else
     {
-        state.stateType = State::READY_SUCCESS;
+        state.stateType = StateType::BT_READY_SUCCESS;
     }
     return state.stateType;
 }

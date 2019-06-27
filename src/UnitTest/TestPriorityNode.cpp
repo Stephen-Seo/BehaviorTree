@@ -19,22 +19,22 @@ TEST(BehaviorTree, PriorityNode)
     };
     const auto alwaysSuccess = [&sCount] (bool /*isContinuing*/) {
         ++sCount;
-        return BehaviorNode::State::READY_SUCCESS;
+        return BehaviorNode::StateType::BT_READY_SUCCESS;
     };
     const auto alwaysFail = [&fCount] (bool /*isContinuing*/) {
         ++fCount;
-        return BehaviorNode::State::FAILED;
+        return BehaviorNode::StateType::BT_FAILED;
     };
     /*
     const auto runningOnce = [&runningOnceDidRunOnce] (bool isContinuing) {
         if(!runningOnceDidRunOnce)
         {
             runningOnceDidRunOnce = true;
-            return BehaviorNode::State::RUNNING;
+            return BehaviorNode::StateType::BT_RUNNING;
         }
         else
         {
-            return BehaviorNode::State::READY_SUCCESS;
+            return BehaviorNode::StateType::BT_READY_SUCCESS;
         }
     };
     */
@@ -42,11 +42,11 @@ TEST(BehaviorTree, PriorityNode)
         if(!runningOnceDidRunOnce)
         {
             runningOnceDidRunOnce = true;
-            return BehaviorNode::State::RUNNING;
+            return BehaviorNode::StateType::BT_RUNNING;
         }
         else
         {
-            return BehaviorNode::State::FAILED;
+            return BehaviorNode::StateType::BT_FAILED;
         }
     };
 

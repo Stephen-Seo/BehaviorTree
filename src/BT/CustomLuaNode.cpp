@@ -26,7 +26,7 @@ std::size_t BT::CustomLuaNode::getChildrenSize() const
     return children.size();
 }
 
-BT::BehaviorNode::State::StateType BT::CustomLuaNode::activateChild(std::size_t index)
+BT::BehaviorNode::StateType BT::CustomLuaNode::activateChild(std::size_t index)
 {
     return children.at(index)->activate();
 }
@@ -41,12 +41,12 @@ lua_State* BT::CustomLuaNode::getLuaState()
     return LWrapper->L;
 }
 
-BT::BehaviorNode::State::StateType BT::CustomLuaNode::performAction()
+BT::BehaviorNode::StateType BT::CustomLuaNode::performAction()
 {
     return action(false);
 }
 
-BT::BehaviorNode::State::StateType BT::CustomLuaNode::continueAction()
+BT::BehaviorNode::StateType BT::CustomLuaNode::continueAction()
 {
     return action(true);
 }
@@ -60,7 +60,7 @@ void BT::CustomLuaNode::getLuaStatesHelper(std::unordered_set<lua_State*>& s)
     BT::BehaviorNode::getLuaStatesHelper(s);
 }
 
-BT::BehaviorNode::State::StateType BT::CustomLuaNode::action(bool isContinuing)
+BT::BehaviorNode::StateType BT::CustomLuaNode::action(bool isContinuing)
 {
     // +1 stack: activate function
     int type = lua_getglobal(LWrapper->L, "activate");
@@ -68,7 +68,7 @@ BT::BehaviorNode::State::StateType BT::CustomLuaNode::action(bool isContinuing)
     {
         std::cerr << "ERROR: global \"activate\" is not a function!\n";
         lua_pop(LWrapper->L, 1);
-        return State::ERROR;
+        return StateType::BT_ERROR;
     }
 
     // +1 stack: boolean parameter
@@ -96,13 +96,13 @@ BT::BehaviorNode::State::StateType BT::CustomLuaNode::action(bool isContinuing)
     switch(resultType)
     {
     case 0:
-        return State::READY_SUCCESS;
+        return StateType::BT_READY_SUCCESS;
     case 1:
-        return State::RUNNING;
+        return StateType::BT_RUNNING;
     case 2:
-        return State::FAILED;
+        return StateType::BT_FAILED;
     default:
-        return State::ERROR;
+        return StateType::BT_ERROR;
     }
 }
 

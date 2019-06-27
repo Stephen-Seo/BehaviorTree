@@ -73,7 +73,7 @@ class ActionNode : public BehaviorNode
 {
 public:
     // bool - isContinuing
-    typedef std::function<State::StateType(bool)> ActionFunctionT;
+    typedef std::function<StateType(bool)> ActionFunctionT;
 
     /*!
         \brief Default initializes ActionNode, not in valid state
@@ -139,13 +139,13 @@ protected:
     std::string luaActionFunctionName;
     static std::atomic_size_t luaScriptIDCounter;
 
-    virtual State::StateType performAction() override;
-    virtual State::StateType continueAction() override;
+    virtual StateType performAction() override;
+    virtual StateType continueAction() override;
 
     virtual void getLuaStatesHelper(std::unordered_set<lua_State*>& s) override;
 
 private:
-    State::StateType performLuaScript(bool isContinuing);
+    StateType performLuaScript(bool isContinuing);
 
 };
 

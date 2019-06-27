@@ -15,24 +15,24 @@ TEST(BehaviorTree, ActionNode)
         if(count < 2)
         {
             ++count;
-            return BehaviorNode::State::RUNNING;
+            return BehaviorNode::StateType::BT_RUNNING;
         }
         else
         {
-            return BehaviorNode::State::READY_SUCCESS;
+            return BehaviorNode::StateType::BT_READY_SUCCESS;
         }
     });
 
     for(std::size_t i = 0; i < 3; ++i)
     {
-        BehaviorNode::State::StateType stateType = an.activate();
+        BehaviorNode::StateType stateType = an.activate();
         if(i != 2)
         {
-            EXPECT_EQ(stateType, BehaviorNode::State::RUNNING);
+            EXPECT_EQ(stateType, BehaviorNode::StateType::BT_RUNNING);
         }
         else
         {
-            EXPECT_EQ(stateType, BehaviorNode::State::READY_SUCCESS);
+            EXPECT_EQ(stateType, BehaviorNode::StateType::BT_READY_SUCCESS);
         }
     }
 
@@ -43,22 +43,22 @@ TEST(BehaviorTree, ActionNode)
         {
             if(!isContinuing)
             {
-                return BehaviorNode::State::RUNNING;
+                return BehaviorNode::StateType::BT_RUNNING;
             }
             else
             {
                 continuedOnce = true;
-                return BehaviorNode::State::READY_SUCCESS;
+                return BehaviorNode::StateType::BT_READY_SUCCESS;
             }
         }
         else
         {
-            return BehaviorNode::State::READY_SUCCESS;
+            return BehaviorNode::StateType::BT_READY_SUCCESS;
         }
     });
 
-    EXPECT_EQ(an.activate(), BehaviorNode::State::RUNNING);
-    EXPECT_EQ(an.activate(), BehaviorNode::State::READY_SUCCESS);
-    EXPECT_EQ(an.activate(), BehaviorNode::State::READY_SUCCESS);
+    EXPECT_EQ(an.activate(), BehaviorNode::StateType::BT_RUNNING);
+    EXPECT_EQ(an.activate(), BehaviorNode::StateType::BT_READY_SUCCESS);
+    EXPECT_EQ(an.activate(), BehaviorNode::StateType::BT_READY_SUCCESS);
 }
 

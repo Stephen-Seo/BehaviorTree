@@ -20,28 +20,28 @@ BT::BehaviorNode::Ptr BT::PriorityNode::getCopy()
     return Ptr(copy.release());
 }
 
-BT::BehaviorNode::State::StateType BT::PriorityNode::performAction()
+BT::BehaviorNode::StateType BT::PriorityNode::performAction()
 {
     resetState();
 
-    State::StateType cStateType;
+    StateType cStateType;
     for(std::size_t i = 0; i < children.size(); ++i)
     {
         cStateType = children[i]->activate();
         switch(cStateType)
         {
-        case State::READY_SUCCESS:
+        case StateType::BT_READY_SUCCESS:
             // state should be default (READY_SUCCESS)
             return state.stateType;
-        case State::RUNNING:
-            state.stateType = State::RUNNING;
+        case StateType::BT_RUNNING:
+            state.stateType = StateType::BT_RUNNING;
             state.lastRunningIndex = i;
             return state.stateType;
-        case State::FAILED:
+        case StateType::BT_FAILED:
             break;
-        case State::ERROR:
+        case StateType::BT_ERROR:
         default:
-            state.stateType = State::ERROR;
+            state.stateType = StateType::BT_ERROR;
             return state.stateType;
         }
     }
@@ -50,30 +50,30 @@ BT::BehaviorNode::State::StateType BT::PriorityNode::performAction()
     return state.stateType;
 }
 
-BT::BehaviorNode::State::StateType BT::PriorityNode::continueAction()
+BT::BehaviorNode::StateType BT::PriorityNode::continueAction()
 {
-    State::StateType cStateType;
+    StateType cStateType;
     for(std::size_t i = state.lastRunningIndex; i < children.size(); ++i)
     {
         cStateType = children[i]->activate();
         switch(cStateType)
         {
-        case State::READY_SUCCESS:
-            state.stateType = State::READY_SUCCESS;
+        case StateType::BT_READY_SUCCESS:
+            state.stateType = StateType::BT_READY_SUCCESS;
             return state.stateType;
-        case State::RUNNING:
-            state.stateType = State::RUNNING;
+        case StateType::BT_RUNNING:
+            state.stateType = StateType::BT_RUNNING;
             state.lastRunningIndex = i;
             return state.stateType;
-        case State::FAILED:
+        case StateType::BT_FAILED:
             break;
-        case State::ERROR:
+        case StateType::BT_ERROR:
         default:
-            state.stateType = State::ERROR;
+            state.stateType = StateType::BT_ERROR;
             return state.stateType;
         }
     }
-    state.stateType = State::READY_SUCCESS;
+    state.stateType = StateType::BT_READY_SUCCESS;
     return state.stateType;
 }
 

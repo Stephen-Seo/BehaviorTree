@@ -20,14 +20,14 @@ BT::BehaviorNode::Ptr BT::LoopNode::getCopy()
     return Ptr(copy.release());
 }
 
-BT::BehaviorNode::State::StateType BT::LoopNode::performAction()
+BT::BehaviorNode::StateType BT::LoopNode::performAction()
 {
     performLoop();
 
     return state.stateType;
 }
 
-BT::BehaviorNode::State::StateType BT::LoopNode::continueAction()
+BT::BehaviorNode::StateType BT::LoopNode::continueAction()
 {
     performLoop(state.lastRunningIndex);
 
@@ -40,20 +40,20 @@ void BT::LoopNode::performLoop(std::size_t index)
     do
     {
         state.stateType = children[index]->activate();
-        if(state.stateType == State::RUNNING)
+        if(state.stateType == StateType::BT_RUNNING)
         {
             state.lastRunningIndex = index;
-            state.stateType = State::RUNNING;
+            state.stateType = StateType::BT_RUNNING;
             isRunningOrFail = true;
         }
-        else if(state.stateType == State::FAILED)
+        else if(state.stateType == StateType::BT_FAILED)
         {
-            state.stateType = State::FAILED;
+            state.stateType = StateType::BT_FAILED;
             isRunningOrFail = true;
         }
-        else if(state.stateType == State::ERROR)
+        else if(state.stateType == StateType::BT_ERROR)
         {
-            state.stateType = State::ERROR;
+            state.stateType = StateType::BT_ERROR;
             isRunningOrFail = true;
         }
         index = (index + 1) % children.size();

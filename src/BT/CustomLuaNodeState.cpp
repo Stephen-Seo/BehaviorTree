@@ -42,16 +42,16 @@ int BT::activateChild(lua_State* L)
         std::size_t index = lua_tointeger(L, 1);
         if(state && state->cln)
         {
-            BehaviorNode::State::StateType result = state->cln->activateChild(index);
+            BehaviorNode::StateType result = state->cln->activateChild(index);
             switch(result)
             {
-            case BehaviorNode::State::READY_SUCCESS:
+            case BehaviorNode::StateType::BT_READY_SUCCESS:
                 lua_pushinteger(L, 0);
                 break;
-            case BehaviorNode::State::RUNNING:
+            case BehaviorNode::StateType::BT_RUNNING:
                 lua_pushinteger(L, 1);
                 break;
-            case BehaviorNode::State::FAILED:
+            case BehaviorNode::StateType::BT_FAILED:
                 lua_pushinteger(L, 2);
                 break;
             default:

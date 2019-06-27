@@ -42,7 +42,7 @@ public:
         Used internally by a different function exposed to this node's lua
         state. (see BT::CustomLuaNodeState.hpp)
     */
-    State::StateType activateChild(std::size_t index);
+    StateType activateChild(std::size_t index);
 
     /*!
         \brief Returns this node's CustomLuaNodeState as a pointer
@@ -62,13 +62,13 @@ protected:
     LuaStateWrapper::Ptr LWrapper;
     CustomLuaNodeState state;
 
-    virtual State::StateType performAction() override;
-    virtual State::StateType continueAction() override;
+    virtual StateType performAction() override;
+    virtual StateType continueAction() override;
 
     virtual void getLuaStatesHelper(std::unordered_set<lua_State*>& s) override;
 
 private:
-    State::StateType action(bool isContinuing);
+    StateType action(bool isContinuing);
 };
 
 } // namespace BT

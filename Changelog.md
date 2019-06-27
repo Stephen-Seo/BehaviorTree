@@ -1,3 +1,9 @@
+# Version 1.11
+
+Changed "BT::BehaviorNode::State::StateType" enum due to possible conflict with
+the names of the enum values. The enum has been redifined as "enum class" and is
+now "BT::BehaviorNode::StateType"
+
 # Version 1.10
 
 Previous implementation did not properly handle an error while generating a

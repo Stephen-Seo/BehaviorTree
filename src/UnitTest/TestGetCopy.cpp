@@ -13,11 +13,11 @@ TEST(BehaviorTree, GetCopy)
 
     const auto alwaysFail = [&fCount] (bool /*isContinuing*/) {
         ++fCount;
-        return BehaviorNode::State::FAILED;
+        return BehaviorNode::StateType::BT_FAILED;
     };
     const auto alwaysSuccess = [&sCount] (bool /*isContinuing*/) {
         ++sCount;
-        return BehaviorNode::State::READY_SUCCESS;
+        return BehaviorNode::StateType::BT_READY_SUCCESS;
     };
 
     PriorityNode pn;

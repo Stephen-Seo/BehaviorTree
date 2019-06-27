@@ -86,7 +86,7 @@ lua_State* BT::ActionNode::getLuaState()
     }
 }
 
-BT::BehaviorNode::State::StateType BT::ActionNode::performAction()
+BT::BehaviorNode::StateType BT::ActionNode::performAction()
 {
     if(actionFunction)
     {
@@ -99,12 +99,12 @@ BT::BehaviorNode::State::StateType BT::ActionNode::performAction()
     }
     else
     {
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         return state.stateType;
     }
 }
 
-BT::BehaviorNode::State::StateType BT::ActionNode::continueAction()
+BT::BehaviorNode::StateType BT::ActionNode::continueAction()
 {
     if(actionFunction)
     {
@@ -117,7 +117,7 @@ BT::BehaviorNode::State::StateType BT::ActionNode::continueAction()
     }
     else
     {
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         return state.stateType;
     }
 }
@@ -130,11 +130,11 @@ void BT::ActionNode::getLuaStatesHelper(std::unordered_set<lua_State*>& s)
     }
 }
 
-BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isContinuing)
+BT::BehaviorNode::StateType BT::ActionNode::performLuaScript(bool isContinuing)
 {
     if(!LWrapper)
     {
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         return state.stateType;
     }
 
@@ -146,7 +146,7 @@ BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isConti
     {
         std::cerr << "ERROR: Global \"" << luaActionFunctionName
             << "\" is not a function!\n";
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         return state.stateType;
     }
 
@@ -158,13 +158,13 @@ BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isConti
     {
         std::cerr << "ERROR: Failed to execute actionFunction in ActionNode's lua!\n";
         lua_pop(LWrapper->L, 1);
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         return state.stateType;
     }
     else if(lua_isinteger(LWrapper->L, -1) != 1)
     {
         lua_pop(LWrapper->L, 1);
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         return state.stateType;
     }
 
@@ -174,17 +174,17 @@ BT::BehaviorNode::State::StateType BT::ActionNode::performLuaScript(bool isConti
     switch(type)
     {
     case 0:
-        state.stateType = State::READY_SUCCESS;
+        state.stateType = StateType::BT_READY_SUCCESS;
         break;
     case 1:
-        state.stateType = State::RUNNING;
+        state.stateType = StateType::BT_RUNNING;
         break;
     case 2:
-        state.stateType = State::FAILED;
+        state.stateType = StateType::BT_FAILED;
         break;
     case 3:
     default:
-        state.stateType = State::ERROR;
+        state.stateType = StateType::BT_ERROR;
         break;
     }
 

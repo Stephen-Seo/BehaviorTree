@@ -28,8 +28,8 @@ public:
     void setSeed(typename RandomEngine::result_type seed);
 
 protected:
-    virtual State::StateType performAction() override;
-    virtual State::StateType continueAction() override;
+    virtual StateType performAction() override;
+    virtual StateType continueAction() override;
 
 private:
     typename RandomEngine::result_type seed;

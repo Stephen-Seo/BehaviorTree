@@ -23,7 +23,7 @@ namespace BT
     is not permitted.
 
     Either use BehaviorLuaFactory to create a BehaviorTree, or manually build
-    one composed of these node types: PriorityNode, SequenceNode, RandomNode, 
+    one composed of these node types: PriorityNode, SequenceNode, RandomNode,
     LoopNode, ConcurrentNode, and ActionNode.
 
     Example of creating a BehaviorTree manually:
@@ -32,13 +32,13 @@ namespace BT
         BehaviorNode::Ptr anPtr = BehaviorNode::Ptr(
             new ActionNode([] (bool isContinuing) {
                 std::cout << "Hello World" << std::endl;
-                return BehaviorNode::State::READY_SUCCESS;
+                return BehaviorNode::StateType::BT_READY_SUCCESS;
         }));
         pn.insert(anPtr);
         anPtr = BehaviorNode::Ptr(
             new ActionNode([] (bool isContinuing) {
                 std::cout << "This shouldn't execute" << std::endl;
-                return BehaviorNode::State::READY_SUCCESS;
+                return BehaviorNode::StateType::BT_READY_SUCCESS;
         }));
         pn.insert(anPtr);
 
@@ -50,16 +50,16 @@ class BehaviorNode
 public:
     typedef std::unique_ptr<BehaviorNode> Ptr;
 
+    enum class StateType : unsigned int
+    {
+        BT_READY_SUCCESS = 0,
+        BT_RUNNING,
+        BT_FAILED,
+        BT_ERROR
+    };
+
     struct State
     {
-        enum StateType
-        {
-            READY_SUCCESS,
-            RUNNING,
-            FAILED,
-            ERROR
-        };
-
         State();
         State(StateType stateType, std::size_t lastRunningIndex);
 
@@ -101,7 +101,7 @@ public:
         \brief Activates the tree described by this node and its children
 
         Based on what type of nodes you are using, this function will behave
-        as described per node and return a State::StateType describing the
+        as described per node and return a StateType describing the
         results of the activation.
 
         PriorityNode -
@@ -127,7 +127,7 @@ public:
             Performs a custom action that returns any of the four possible
         state types.
     */
-    State::StateType activate();
+    StateType activate();
 
     /*!
         \brief Returns a copy of the tree described by this node and children
@@ -177,8 +177,8 @@ protected:
     std::vector<Ptr> children;
     State state;
 
-    virtual State::StateType performAction() = 0;
-    virtual State::StateType continueAction() = 0;
+    virtual StateType performAction() = 0;
+    virtual StateType continueAction() = 0;
 
     virtual void getLuaStatesHelper(std::unordered_set<lua_State*>& s);
 

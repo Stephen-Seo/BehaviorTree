@@ -60,9 +60,9 @@ TEST(BehaviorTree, RandomNode)
                 std::unique_ptr<BT::ActionNode>(
                     new BT::ActionNode(
                         [&flags, i] (bool /*isContinuing*/)
-                            -> BT::BehaviorNode::State::StateType {
+                            -> BT::BehaviorNode::StateType {
                 flags.set(i);
-                return BT::BehaviorNode::State::READY_SUCCESS;
+                return BT::BehaviorNode::StateType::BT_READY_SUCCESS;
             })));
             rn.insert(std::move(an));
         }
@@ -77,7 +77,7 @@ TEST(BehaviorTree, RandomNode)
         for(unsigned int i = 0; i < 10; ++i)
         {
             nextIndex = dist(rengine);
-            EXPECT_EQ(rn.activate(), BT::BehaviorNode::State::READY_SUCCESS);
+            EXPECT_EQ(rn.activate(), BT::BehaviorNode::StateType::BT_READY_SUCCESS);
             checkFlags(nextIndex);
             atLeastOneIsTrue();
             resetFlags();
@@ -96,16 +96,16 @@ TEST(BehaviorTree, RandomNode)
                 std::unique_ptr<BT::ActionNode>(
                     new BT::ActionNode(
                         [&flags, &hasRun, i] (bool /*isContinuing*/)
-                            -> BT::BehaviorNode::State::StateType {
+                            -> BT::BehaviorNode::StateType {
                 if(hasRun.test(i))
                 {
                     flags.set(i);
-                    return BT::BehaviorNode::State::READY_SUCCESS;
+                    return BT::BehaviorNode::StateType::BT_READY_SUCCESS;
                 }
                 else
                 {
                     hasRun.set(i);
-                    return BT::BehaviorNode::State::RUNNING;
+                    return BT::BehaviorNode::StateType::BT_RUNNING;
                 }
             })));
             rn.insert(std::move(an));
@@ -113,7 +113,7 @@ TEST(BehaviorTree, RandomNode)
 
         rengine.seed(1);
         dist = std::uniform_int_distribution<unsigned int>(0, 3);
-        BT::BehaviorNode::State::StateType stateType;
+        BT::BehaviorNode::StateType stateType;
         unsigned int nextIndex = 0;
         const unsigned int maxIterations = 1024;
         unsigned int iterations = 0;
@@ -129,7 +129,7 @@ TEST(BehaviorTree, RandomNode)
                     break;
                 }
             }
-            while(stateType == BT::BehaviorNode::State::RUNNING);
+            while(stateType == BT::BehaviorNode::StateType::BT_RUNNING);
             checkFlags(nextIndex);
             atLeastOneIsTrue();
             resetFlags();
