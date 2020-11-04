@@ -16,6 +16,14 @@ struct LuaStateWrapper
     LuaStateWrapper();
     ~LuaStateWrapper();
 
+    // deny copy
+    LuaStateWrapper(const LuaStateWrapper&) = delete;
+    LuaStateWrapper& operator =(const LuaStateWrapper&) = delete;
+
+    // allow move
+    LuaStateWrapper(LuaStateWrapper&&) = default;
+    LuaStateWrapper& operator =(LuaStateWrapper&&) = default;
+
     lua_State* L;
 };
 

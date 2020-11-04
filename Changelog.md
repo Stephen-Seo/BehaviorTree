@@ -1,3 +1,11 @@
+# Version 1.12
+
+Disabled copy constructor/operator for BT::LuaStateWrapper. This has no effect
+on existing programs that use the BT::LuaStateWrapper::Ptr, which is a
+std::shared\_ptr. Copy has been disabled because if the wrapper instance is
+copied, it will attempt to cleanup the lua state more than once, which is an
+exception waiting to happen.
+
 # Version 1.11
 
 Changed "BT::BehaviorNode::State::StateType" enum due to possible conflict with
